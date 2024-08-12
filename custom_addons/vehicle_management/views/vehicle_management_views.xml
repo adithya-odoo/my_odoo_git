@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+     <record id="vehicle_management_action" model="ir.actions.act_window">
+             <field name="name">Vehicle</field>
+            <field name="res_model">vehicle.management</field>
+             <field name="view_mode">tree,form,kanban</field>
+    </record>
+      <record id="vehicle_management_tree_view" model="ir.ui.view">
+        <field name="name">vehicle_management_tree_view</field>
+        <field name="model">vehicle.management</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="partner_id"/>
+                <field name="vehicle_type"/>
+                <field name="vehicle_id"/>
+            </tree>
+        </field>
+      </record>
+     <record id="vehicle_reference_number" model="ir.sequence">
+         <field name="name">vehicle_reference_incrementation</field>
+         <field name="code">vehicle.reference</field>
+         <field name="prefix">VEH/</field>
+         <field name="padding">3</field>
+         <field name="number_next">1</field>
+         <field name="number_increment">1</field>
+         <field name="company_id" eval="False"/>
+     </record>
+
+    <record id="vehicle_management_form_view" model="ir.ui.view">
+        <field name="name">vehicle management</field>
+        <field name="model">vehicle.management</field>
+        <field name="arch" type="xml">
+        <form>
+            <header>
+                <button name="confirm_button" class="oe_highlight" string="Confirm" type="object" help="Move Appointment to In Progress state" invisible="state in ('progress', 'done', 'cancelled') "/>
+                <field name="state" widget="statusbar" statusbar_visible="draft, progress, done, cancelled" options="{'clickable': '1'}"/>
+            </header>
+            <sheet>
+                <group col="2">
+                    <field name="image" widget="image" class="oe_avatar" nolabel="1"/>
+                    <h1>  <field name="reference_no"/></h1>
+                    <group name="partner_details">
+                        <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1}" placeholder="Type to find a customer..." readonly="state in ['in_progress', 'done', 'cancelled']"/>
+                        <field name="phone" widget="phone"/>
+                    </group>
+                    <group>
+                        <field name="advisor_id" readonly="state in ['in_progress', 'done', 'cancelled']"/>
+                        <field name="active"/>
+                        <field name="duration_time"/>
+                        <field name="estimated_amount" invisible="service_type in ('free')" widget="monetary"/>
+                    </group>
+                    <group>
+                        <field name="start_date"/>
+                        <field name="delivery_date"/>
+                        <field name="service_type" readonly="state in ['progress', 'done', 'cancelled']"/>
+                        <field name="vehicle_number" readonly="state in ['progress', 'done', 'cancelled']"/>
+                        <field name="vehicle_type" readonly="state in ['progress', 'done', 'cancelled']"/>
+                        <field name="vehicle_id"  context="{'default_category_id': vehicle_type}"/>
+                        <field name="company_name"/>
+                    </group>
+                </group>
+
+                 <notebook>
+                     <page string="Complaints">
+                         <field name="customer_complaint" placeholder="Write your complaint"/>
+                     </page>
+                </notebook>
+            </sheet>
+                  <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+        </form>
+        </field>
+    </record>
+
+    <menuitem id="vehicle_management_menu" name="Vehicle Management" action="vehicle_management_action"/>
+</odoo>

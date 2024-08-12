@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="patient_details_action" model="ir.actions.act_window">
+    <field name="name">Patient</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <record id="patient_form_view" model="ir.ui.view">
+        <field name="name">patient_details</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+                <field name="function" position="after">
+                    <field name="age"/>
+                    <field name="blood_group"/>
+                </field>
+            <field name="mobile" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+
+             <field name="email" position="attributes">
+              <attribute name="invisible">1</attribute>
+            </field>
+
+    </field>
+    </record>
+
+
+         <menuitem id="hospital_management_menu_action" name="Hospital" action="patient_details_action"/>
+         <menuitem id="hospital_menu_root_reception" name="Reception" parent="hospital_management_menu_action"/>
+         <menuitem id="patient_menu" name="Patients" parent="hospital_menu_root_reception" action="patient_details_action"/>
+
+</odoo>

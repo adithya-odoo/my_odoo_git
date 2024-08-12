@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="department_details_action" model="ir.actions.act_window">
+    <field name="name">Department</field>
+    <field name="res_model">hr.department</field>
+    <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <menuitem id="hospital_menu_root_department" name="Department" parent="hospital_management_menu_action"/>
+    <menuitem id="hospital_department_menu" name="Department" parent="hospital_menu_root_department" action="department_details_action"/>
+
+</odoo>

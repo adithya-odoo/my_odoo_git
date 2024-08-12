@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="hospital_consultation_action" model="ir.actions.act_window">
+    <field name="name">Hospital consultation</field>
+    <field name="res_model">hospital.consultation</field>
+    <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <menuitem id="hospital_consultation_menu" name="Consulting" parent="hospital_management_menu_action" action="hospital_consultation_action"/>
+
+</odoo>

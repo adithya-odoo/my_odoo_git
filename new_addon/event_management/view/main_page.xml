@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<odoo>
+<record id="event_management_action" model="ir.actions.act_window">
+    <field name="name">Properties</field>
+    <field name="res_model">event.management</field>
+    <field name="view_mode">tree,form,kanban</field>
+</record>
+
+    <record id="event_management_tree_view" model="ir.ui.view">
+        <field name="name">view.event.management.tree</field>
+        <field name="model">event.management</field>
+        <field name="arch" type="xml">
+          <tree>
+               <field name="name"/>
+              <field name="availablity_date"/>
+          </tree>
+        </field>
+    </record>
+
+    <record id="event_management_form_view" model="ir.ui.view">
+        <field name="name">event.management.form.view</field>
+        <field name="model">event.management</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <header>
+                    </header>
+                    <group>
+                        <group>
+                          <field name="name"/>
+                            <field name="expected_price"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="availablity_date"/>.
+                            <field name="selling_price"/>
+                            <field name="status"/>
+                            <field name="bedroom"/>
+                        </group>
+                    </group>
+                    <notebook>
+                       <page string="Description">
+                          <field name="description"/>
+                      </page>
+                   </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_management_search_view" model="ir.ui.view">
+        <field name="name">event.search.view</field>
+        <field name="model">event.management</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="availablity_date"/>
+                <field name="selling_price"/>
+                <field name="status"/>
+                <field name="bedroom"/>
+                <filter name="greaterthan" domain="[('bedroom', '&gt;',2)]"/>.
+<!--                <groupby>-->
+            </search>
+        </field>
+    </record>
+    <menuitem id="event_management_menu_action" name="Event"/>
+    <menuitem id="test_menu_root" name="Advertisment" parent="event_management_menu_action"/>
+    <menuitem id="child" name="Event locations" parent="test_menu_root" action="event_management_action"/>
+
+</odoo>
