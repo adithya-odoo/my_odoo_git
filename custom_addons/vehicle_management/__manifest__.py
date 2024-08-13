@@ -3,17 +3,20 @@
 {
     'name': "Vehicle Management",
     'description': "Vehicle management",
-    'application':True,
+    'application': True,
 
-    'depends':[
+    'depends': [
          'base',
          'fleet',
-         'mail'
+         'hr',
+         'mail',
+
     ],
 
     'data': [
         'views/vehicle_management_views.xml',
         'views/repair_tag_views.xml',
+        'data/load_data.xml',
         'security/ir.model.access.csv',
     ]
 }
