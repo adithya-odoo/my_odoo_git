@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="customer_action" model="ir.actions.act_window">
+        <field name="name">Customer</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <record id="customer_form" model="ir.ui.view">
+        <field name="name">Customer</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button id="create_service" type="action" name="%(vehicle_management_action)d" string="Create service form" class="oe_highlight"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+    <menuitem id="customer_menu" name="Customer" parent="vehicle_management_menu" action="customer_action"/>
+</odoo>
