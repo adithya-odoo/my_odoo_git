@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 import datetime
+
 from datetime import timedelta
 
 from odoo import api, fields, models, _
+
+from odoo import Command
 
 from odoo.exceptions import ValidationError
 
@@ -21,13 +24,14 @@ class VehicleManagement(models.Model):
                                  required=True)
     vehicle_type_id = fields.Many2one('fleet.vehicle.model.category', string="Vehicle type",
                                       related='vehicle_id.category_id', store=True)
-    active = fields.Boolean(default=True, related="partner_id.active", readonly=False)
+    active = fields.Boolean(default=True, related="partner_id.active")
     state = fields.Selection(selection=[('draft', 'Draft'),
                                         ('done', 'Done'),
                                         ('progress', 'Progress'),
                                         ('done', 'Done'),
                                         ('ready for delivery', 'Ready For Delivery'),
-                                        ('cancelled', 'Cancelled')],
+                                        ('cancelled', 'Cancelled'),
+                                        ('paid', 'Paid')],
                              default='draft', required=True, tracking=True)
     phone = fields.Char(related='partner_id.phone', string="Phone", readonly=False)
     vehicle_number = fields.Char(string="Vehicle number", copy=False, required=True)
@@ -53,30 +57,29 @@ class VehicleManagement(models.Model):
     total_product_cost = fields.Monetary(string="Total cost", readonly=True, default=0.0)
     total_time_cost = fields.Monetary(string="Total cost", readonly=True, default=0.0)
     total_cost = fields.Monetary(string="Total cost", default=0.0)
-    smart_partner = fields.Integer(compute='vehicle_history')
     estimated_delivery_date = fields.Date(string="Estimated delivery date")
-    invoice_status = fields.Selection([('invoice draft', 'Invoice Draft'), ('invoiced', 'Invoiced')],
-                                      default="invoice draft")
+    smart_invoice = fields.Integer(compute='compute_invoice_count')
+    invoice_id = fields.Many2one('account.move', string="Invoice", store=True)
+    invoice_status = fields.Selection(related='invoice_id.state')
+    paid_status = fields.Char(compute="change_payment_state")
 
-    def vehicle_history(self):
+    def compute_invoice_count(self):
         for record in self:
-            record.smart_partner = self.env['vehicle.management'].search_count(
-                [('partner_id', '=', self.partner_id.id)])
+            record.smart_invoice = len(record.invoice_id)
 
-    def action_get_vehicles_record(self):
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Vehicles',
-            'view_mode': 'tree',
-            'res_model': 'vehicle.management',
-            'domain': [('partner_id', '=', self.partner_id.id)],
-            'context': "{'create': False}"
-        }
+    def action_get_invoice_record(self):
+        if self.invoice_id:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'account.move',
+                'res_id': self.invoice_id.id,
+                'view_mode': 'form',
+                'view_id': self.env.ref('account.view_move_form').id,
+            }
 
     @api.onchange('duration_time')
     def calculate_delivery_date(self):
-        print(self.partner_id.mapped('active'))
+        # print(self.partner_id.mapped('active'))
         if self.duration_time:
             self.delivery_date = self.start_date + timedelta(days=self.duration_time)
 
@@ -105,7 +108,7 @@ class VehicleManagement(models.Model):
                 ('start_date', '=', record.start_date),
                 ('partner_id', '=', record.partner_id.id),
             ])
-            print(existing_vehicle)
+            # print(existing_vehicle)
             if len(existing_vehicle) > 1:
                 raise ValidationError('This Vehicle number is invalid.')
 
@@ -115,7 +118,7 @@ class VehicleManagement(models.Model):
 
     @api.onchange('labour_line_ids')
     def _total_time_product_cost(self):
-        print(self.labour_line_ids.mapped('sub_total_time_cost'))
+        # print(self.labour_line_ids.mapped('sub_total_time_cost'))
         self.total_time_cost = sum(self.labour_line_ids.mapped('sub_total_time_cost'))
 
     @api.onchange('total_time_cost', 'total_product_cost')
@@ -123,27 +126,76 @@ class VehicleManagement(models.Model):
         self.total_cost = self.total_time_cost + self.total_product_cost
 
     def action_create_invoice(self):
-        print(self.product_line_ids.product_id)
-        invoice_vals = {
-            'partner_id': self.partner_id.id,
-            'move_type': 'out_invoice',
-            'invoice_date': fields.Date.today(),
-            'invoice_line_ids': [(0, 0, {
-                'product_id': self.product_line_ids.product_id.id,
-                'name': self.vehicle_number,
-                'quantity': self.product_line_ids.quantity,
-                'price_unit': self.product_line_ids.product_price,
-            })],
-        }
-        invoice = self.env['account.move'].create(invoice_vals)
+        existing_invoice = self.env['account.move'].search([
+                ('partner_id', '=', self.partner_id.id),
+                ('state', '!=', 'paid')
+            ], limit=1)
+        print(existing_invoice, "ytyrihuy")
+        print(existing_invoice.id, "qwerty")
+        invoice_vals = []
+        if existing_invoice:
+            print("hello")
+            for record in self.product_line_ids:
+                invoice_vals.append(Command.create({'product_id': record.labor_id.id,
+                                                    'price_unit': record.hourly_cost,
+                                                    'quantity': record.time_spent,
+                                                    'product_uom_id': record.product_uom_id.id,
+                                                    }))
+            existing_invoice.write({
+                'invoice_line_ids': invoice_vals
+            })
+            self.invoice_id = existing_invoice.id
 
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Customer Invoice',
-            'res_model': 'account.move',
-            'res_id': invoice.id,
-            'view_mode': 'form',
-            'view_id': self.env.ref('account.view_move_form').id,
-            'target': 'current',
-        }
+            return {
+              'type': 'ir.actions.act_window',
+              'name': 'Customer Invoice',
+              'res_model': 'account.move',
+              'res_id': existing_invoice.id,
+              'view_mode': 'form',
+              'view_id': self.env.ref('account.view_move_form').id,
+            }
 
+        else:
+            print("hiiiiii")
+            invoice_vals = []
+            for record in self.product_line_ids:
+                invoice_vals.append(Command.create({'product_id': record.product_id.id,
+                                                    'price_unit': record.product_price,
+                                                    'quantity': record.quantity,
+                                                    'product_uom_id': record.product_uom_id.id,
+                                                    }))
+            for record in self.labour_line_ids:
+                invoice_vals.append(Command.create({'product_id': record.labor_id.id,
+                                                    'price_unit': record.hourly_cost,
+                                                    'quantity': record.time_spent,
+                                                    'product_uom_id': record.product_uom_id.id,
+                                                    }))
+            print(invoice_vals)
+
+            out_invoice = self.env['account.move'].create({
+              'move_type': 'out_invoice',
+              'date': datetime.date.today(),
+              'invoice_date': datetime.date.today(),
+              'partner_id': self.partner_id.id,
+              'invoice_line_ids': invoice_vals
+              })
+            print(out_invoice)
+            self.invoice_id = out_invoice.id
+
+            return {
+              'type': 'ir.actions.act_window',
+              'name': 'Customer Invoice',
+              'res_model': 'account.move',
+              'res_id': out_invoice.id,
+              'view_mode': 'form',
+              'view_id': self.env.ref('account.view_move_form').id,
+            }
+
+    def change_payment_state(self):
+        for record in self:
+            print(record.invoice_id.payment_state)
+            record.paid_status = record.invoice_id.payment_state
+            if record.paid_status == 'paid':
+                record.write({
+                    'state': "paid"
+                })

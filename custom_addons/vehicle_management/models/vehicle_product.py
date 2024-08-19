@@ -15,6 +15,7 @@ class VehicleProduct(models.Model):
                                   related='company_id.currency_id',
                                   default=lambda self: self.env.user.company_id.currency_id.id)
     quantity = fields.Float(string="Quantity", default=1)
+    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', readonly=True)
     product_price = fields.Float('Price', related="product_id.list_price", currency_field='currency_id',
                                  default=0.0)
     product_sub_total = fields.Monetary(string="Sub total")

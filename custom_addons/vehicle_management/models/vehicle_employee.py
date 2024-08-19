@@ -13,6 +13,7 @@ class VehicleEmployee(models.Model):
                                   default=lambda self: self.env.user.company_id.currency_id.id)
     hourly_cost = fields.Monetary('Hourly Cost', related="labor_id.hourly_cost", currency_field='currency_id',
                                   default=0.0)
+    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', readonly=True)
     time_spent = fields.Integer(string="Time Spent", default=1)
     sub_total_time_cost = fields.Monetary(string="Sub total cost", default=0.0)
 

@@ -35,20 +35,21 @@
             <form>
                 <header>
                     <button id="create_invoice" type="object" name="action_create_invoice" string="Create Invoice" class="btn-primary"/>
-                    <button name="confirm_button" class="oe_highlight" string="Confirm" type="object" help="Move stage to In Progress state" invisible="state in ('progress', 'done', 'cancelled', 'ready for delivery') "/>
-                    <button name="ready_to_delivery" class="oe_highlight" string="Ready to delivery" type="object" help="Move to ready to delivery" invisible="state in ('draft', 'done', 'cancelled', 'ready for delivery') "/>
+                    <button name="confirm_button" class="oe_highlight" string="Confirm" type="object" help="Move stage to In Progress state" invisible="state !='draft' "/>
+                    <button name="ready_to_delivery" class="oe_highlight" string="Ready to delivery" type="object" help="Move to ready to delivery" invisible="state != 'progress'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft, progress, done, cancelled,ready for delivery" options="{'clickable': '1'}"/>
                 </header>
             <sheet>
+                <widget name="web_ribbon" title="Paid" bg_color="text-bg-success" invisible="state in ('draft', 'progress', 'done', 'ready for delivery', 'cancelled')"/>
                 <div name="button_box" position="inside">
-                <button class="oe_stat_button"
-                         type="object"
-                         icon="fa-taxi"
-                         name="action_get_vehicles_record">
-                    <field string="Customer" name="smart_partner" widget="statinfo"/>
-                </button>
+                    <button name="action_get_invoice_record"
+                        string="Invoice"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o">
+                         <field name="smart_invoice" widget='statinfo' string="Invoice" icon="fa fa-file-invoice" options="{'no_create': True, 'no_quick_create': True}" />
+                    </button>
             </div>
-
                 <group col="2">
                     <field name="image" widget="image" class="oe_avatar" nolabel="1"/>
                     <h1><field name="name"/></h1>
@@ -64,6 +65,7 @@
                         <field name="vehicle_type_id" readonly="state in ['progress', 'done', 'cancelled']"/>
                         <field name="vehicle_id"  context="{'default_category_id': vehicle_type_id}"/>
                         <field name="company_id"/>
+                        <field name="paid_status"/>
                     </group>
                     <group>
                         <field name="advisor_id" readonly="state in ['in_progress', 'done', 'cancelled']"/>
@@ -87,6 +89,7 @@
                                 <field name="hourly_cost" widget="monetary"/>
                                 <field name="time_spent" widget="float_time"/>
                                 <field name="sub_total_time_cost" widget="monetary"/>
+                                <field name="product_uom_id" ref="uom.product_uom_unit"/>
                             </tree>
                         </field>
                         <group>
@@ -103,6 +106,7 @@
                                 <field name="product_price" widget="monetary"/>
                                 <field name="quantity"/>
                                 <field name="product_sub_total" widget="monetary"/>
+                                <field name="product_uom_id"/>
                             </tree>
                         </field>
                          <group>

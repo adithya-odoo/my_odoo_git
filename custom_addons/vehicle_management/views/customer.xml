@@ -16,6 +16,14 @@
                     <button id="create_service" type="action" name="%(vehicle_management_action)d" string="Create service form" class="oe_highlight"/>
                 </header>
             </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button"
+                         type="object"
+                         icon="fa-taxi"
+                         name="action_get_vehicles_record">
+                        <field string="Customer" name="smart_partner" widget="statinfo"/>
+                    </button>
+            </xpath>
         </field>
     </record>
     <menuitem id="customer_menu" name="Customer" parent="vehicle_management_menu" action="customer_action"/>

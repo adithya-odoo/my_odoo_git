@@ -7,9 +7,11 @@
 
     'depends': [
          'base',
+        'sale',
          'fleet',
          'hr',
          'mail',
+        'account',
     ],
 
     'data': [
@@ -17,7 +19,7 @@
         'views/customer.xml',
         'views/repair_tag_views.xml',
         'data/load_data.xml',
-        # 'data/labour_product.xml',
+        'data/labour_product.xml',
         'security/ir.model.access.csv',
     ]
 }
