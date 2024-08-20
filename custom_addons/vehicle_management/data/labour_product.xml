@@ -7,11 +7,4 @@
             <field name="sale_line_warn">no-message</field>
         </record>
     </data>
-     <data>
-        <record id="vehicle_labour_product_product2" model="product.product">
-             <field name="name">new service product</field>
-            <field name="type">service</field>
-            <field name="sale_line_warn">no-message</field>
-        </record>
-    </data>
 </odoo>

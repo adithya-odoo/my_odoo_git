@@ -12,6 +12,8 @@
          'hr',
          'mail',
         'account',
+        'contacts',
+        'sale_management',
     ],
 
     'data': [
@@ -20,6 +22,8 @@
         'views/repair_tag_views.xml',
         'data/load_data.xml',
         'data/labour_product.xml',
+        'data/email_template.xml',
+        'data/ir_cron_data.xml',
         'security/ir.model.access.csv',
     ]
 }

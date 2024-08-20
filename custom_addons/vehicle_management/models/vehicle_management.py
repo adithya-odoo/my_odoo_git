@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 
-from datetime import timedelta
-
-from odoo import api, fields, models, _
-
-from odoo import Command
+from odoo import api, Command, fields, models, _
 
 from odoo.exceptions import ValidationError
 
@@ -23,13 +19,12 @@ class VehicleManagement(models.Model):
                                  domain="[('category_id', '=', vehicle_type_id)]",
                                  required=True)
     vehicle_type_id = fields.Many2one('fleet.vehicle.model.category', string="Vehicle type",
-                                      related='vehicle_id.category_id', store=True)
-    active = fields.Boolean(default=True, related="partner_id.active")
+                                      related='vehicle_id.category_id', store=True, ondelete='set null')
+    active = fields.Boolean(default=True)
     state = fields.Selection(selection=[('draft', 'Draft'),
-                                        ('done', 'Done'),
                                         ('progress', 'Progress'),
-                                        ('done', 'Done'),
                                         ('ready for delivery', 'Ready For Delivery'),
+                                        ('done', 'Done'),
                                         ('cancelled', 'Cancelled'),
                                         ('paid', 'Paid')],
                              default='draft', required=True, tracking=True)
@@ -77,11 +72,11 @@ class VehicleManagement(models.Model):
                 'view_id': self.env.ref('account.view_move_form').id,
             }
 
-    @api.onchange('duration_time')
     def calculate_delivery_date(self):
-        # print(self.partner_id.mapped('active'))
-        if self.duration_time:
-            self.delivery_date = self.start_date + timedelta(days=self.duration_time)
+        self.delivery_date = datetime.date.today()
+        self.write({
+            'state': 'done'
+        })
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -108,7 +103,6 @@ class VehicleManagement(models.Model):
                 ('start_date', '=', record.start_date),
                 ('partner_id', '=', record.partner_id.id),
             ])
-            # print(existing_vehicle)
             if len(existing_vehicle) > 1:
                 raise ValidationError('This Vehicle number is invalid.')
 
@@ -118,7 +112,6 @@ class VehicleManagement(models.Model):
 
     @api.onchange('labour_line_ids')
     def _total_time_product_cost(self):
-        # print(self.labour_line_ids.mapped('sub_total_time_cost'))
         self.total_time_cost = sum(self.labour_line_ids.mapped('sub_total_time_cost'))
 
     @api.onchange('total_time_cost', 'total_product_cost')
@@ -128,18 +121,21 @@ class VehicleManagement(models.Model):
     def action_create_invoice(self):
         existing_invoice = self.env['account.move'].search([
                 ('partner_id', '=', self.partner_id.id),
-                ('state', '!=', 'paid')
+                ('move_type', '=', 'out_invoice'),
+                ('payment_state', '!=', 'paid'),
             ], limit=1)
-        print(existing_invoice, "ytyrihuy")
-        print(existing_invoice.id, "qwerty")
         invoice_vals = []
         if existing_invoice:
-            print("hello")
             for record in self.product_line_ids:
-                invoice_vals.append(Command.create({'product_id': record.labor_id.id,
+                invoice_vals.append(Command.create({'product_id': record.product_id.id,
+                                                    'price_unit': record.product_price,
+                                                    'quantity': record.quantity,
+                                                    }))
+            for record in self.labour_line_ids:
+                invoice_vals.append(Command.create({'product_id': self.env.ref('vehicle_management.vehicle_labour_product_product').id,
+                                                    'name': record.labor_id.name,
                                                     'price_unit': record.hourly_cost,
                                                     'quantity': record.time_spent,
-                                                    'product_uom_id': record.product_uom_id.id,
                                                     }))
             existing_invoice.write({
                 'invoice_line_ids': invoice_vals
@@ -156,21 +152,18 @@ class VehicleManagement(models.Model):
             }
 
         else:
-            print("hiiiiii")
             invoice_vals = []
             for record in self.product_line_ids:
                 invoice_vals.append(Command.create({'product_id': record.product_id.id,
                                                     'price_unit': record.product_price,
                                                     'quantity': record.quantity,
-                                                    'product_uom_id': record.product_uom_id.id,
                                                     }))
             for record in self.labour_line_ids:
-                invoice_vals.append(Command.create({'product_id': record.labor_id.id,
+                invoice_vals.append(Command.create({'product_id': self.env.ref('vehicle_management.vehicle_labour_product_product').id,
+                                                    'name': record.labor_id.name,
                                                     'price_unit': record.hourly_cost,
                                                     'quantity': record.time_spent,
-                                                    'product_uom_id': record.product_uom_id.id,
                                                     }))
-            print(invoice_vals)
 
             out_invoice = self.env['account.move'].create({
               'move_type': 'out_invoice',
@@ -179,7 +172,6 @@ class VehicleManagement(models.Model):
               'partner_id': self.partner_id.id,
               'invoice_line_ids': invoice_vals
               })
-            print(out_invoice)
             self.invoice_id = out_invoice.id
 
             return {
@@ -193,9 +185,30 @@ class VehicleManagement(models.Model):
 
     def change_payment_state(self):
         for record in self:
-            print(record.invoice_id.payment_state)
             record.paid_status = record.invoice_id.payment_state
             if record.paid_status == 'paid':
                 record.write({
                     'state': "paid"
                 })
+
+    @api.onchange('state')
+    def check_ready_for_delivery(self):
+        if self.state == 'ready for delivery':
+            self.action_send_mail()
+
+    def action_send_mail(self):
+        mail_template = self.env.ref("vehicle_management.mail_template_blog")
+        mail_template.send_mail(self.id, force_send=True)
+
+    def vehicle_form_archive(self):
+        for record in self.search([('state', '=', 'cancelled'),
+                                   ('start_date', '<=', datetime.date.today() - datetime.timedelta(30))]):
+            record.action_archive()
+
+    # def customer_archive(self):
+    #     archived_customer = self.env['res.partner'].search([('active', '=', False)])
+    #     res = super().action_archive()
+
+
+
+
