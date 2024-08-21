@@ -35,13 +35,16 @@
             <form>
                 <header>
                     <button string="Done" type="object" class="oe_highlight" name="calculate_delivery_date" invisible="state != 'ready for delivery'"/>
-                    <button id="create_invoice" type="object" name="action_create_invoice" string="Create Invoice" class="btn-primary" invisible="smart_invoice != 0"/>
-                    <button name="confirm_button" class="oe_highlight" string="Confirm" type="object" help="Move stage to In Progress state" invisible="state !='draft' "/>
-                    <button name="ready_to_delivery" class="oe_highlight" string="Ready to delivery" type="object" help="Move to ready to delivery" invisible="state != 'progress'"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft, progress, done, cancelled,ready for delivery" options="{'clickable': '1'}"/>
+                    <button id="create_invoice" type="object" name="action_create_invoice" string="Create Invoice" class="btn-primary" invisible="smart_invoice != 0 or state not in ('done','ready for delivery')"/>
+                    <button name="action_confirm_button" class="oe_highlight" string="Confirm" type="object" help="Move stage to In Progress state" invisible="state !='draft'"/>
+                    <button name="action_ready_to_delivery" class="oe_highlight" string="Ready to delivery" type="object" help="Move to ready to delivery" invisible="state != 'progress'"/>
+                    <button name="action_to_cancel" class="oe_highlight" string="Cancel" type="object" invisible="state=='cancelled'"/>
+                    <button name="action_move_to_draft" class="oe_highlight" string="Move to draft" type="object" invisible="state!='cancelled'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft, progress, done, cancelled,ready for delivery"/>
                 </header>
             <sheet>
                 <widget name="web_ribbon" title="Paid" bg_color="text-bg-success" invisible="state in ('draft', 'progress', 'done', 'ready for delivery', 'cancelled')"/>
+                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active" widget_id="widget_1"/>
                 <div name="button_box" position="inside">
                     <button name="action_get_invoice_record"
                         string="Invoice"

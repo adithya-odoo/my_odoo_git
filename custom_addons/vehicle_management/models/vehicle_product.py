@@ -21,5 +21,7 @@ class VehicleProduct(models.Model):
 
     @api.onchange('product_id', 'quantity')
     def _subtotal_product_cost_calculate(self):
+        """ To calculate the subtotal of product price
+                              product_sub_total = product_price * quantity """
         if self.quantity:
             self.product_sub_total = self.quantity * self.product_price

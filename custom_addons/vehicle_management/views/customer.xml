@@ -13,7 +13,9 @@
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="before">
                 <header>
-                    <button id="create_service" type="action" name="%(vehicle_management_action)d" string="Create service form" class="oe_highlight"/>
+                    <button id="create_service" type="object" name="get_vehicle_management_form_view" string="Create service form" class="oe_highlight"
+                     context="{'default_partner_id': id}"/>
+                    <field name="customer_state" widget="statusbar" statusbar_visible="non service customer, service customer" options='{"clickable":1}'/>
                 </header>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">

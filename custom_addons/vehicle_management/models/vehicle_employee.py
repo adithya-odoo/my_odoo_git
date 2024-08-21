@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from odoo import api, fields, models
 
 
@@ -19,6 +21,8 @@ class VehicleEmployee(models.Model):
     sub_total_time_cost = fields.Monetary(string="Sub total cost", default=0.0)
 
     @api.onchange('time_spent', 'hourly_cost')
-    def _total_time_cost_calculate(self):
+    def _sub_total_time_cost_calculate(self):
+        """ To calculate the subtotal of labor cost
+            sub_total_time_cost = time_spent * hourly_cost """
         if self.time_spent:
             self.sub_total_time_cost = self.time_spent * self.hourly_cost

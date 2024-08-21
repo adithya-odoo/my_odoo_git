@@ -24,6 +24,8 @@
         'data/labour_product.xml',
         'data/email_template.xml',
         'data/ir_cron_data.xml',
+        # 'data/automation_rule.xml',
+        'security/vehicle_management_security.xml',
         'security/ir.model.access.csv',
     ]
 }

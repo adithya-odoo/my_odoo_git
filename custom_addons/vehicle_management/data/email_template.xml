@@ -2,7 +2,7 @@
 <odoo>
    <data>
         <!--Template to send demo mail template for the customer-->
-        <record id="mail_template_blog" model="mail.template">
+        <record id="vehicle_delivery_mail_template" model="mail.template">
             <field name="name">Email Template For Blog</field>
             <field name="model_id" ref="vehicle_management.model_vehicle_management"/>
             <field name="email_from">{{ object.company_id.email }}</field>
@@ -11,15 +11,21 @@
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
                     <div style="justify-content: center;background-color: #714B67; padding:0.6rem;padding-left: 35px;text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;width:40%">
-                        <h2>
+                        <h1>
                             Hi,
                             <t t-out="object.partner_id.name"/>
-                        </h2>
+                        </h1>
                         <div>
-                            <h3>
+                            <h2>
                                 Your vehicle is ready to delivered to you, so we kindly hope you will be happy for our
                                 service.
-                            </h3>
+                            </h2>
+                            <h1>Cost details:</h1><br/>
+                            <h2>Product cost:</h2>
+                            <h2>Product total cost: <t t-out="object.total_product_cost"/></h2><br/>
+                            <h2>Labour cost:</h2>
+                            <h2>Total labour cost: <t t-out="object.total_time_cost"/> </h2><br/>
+                            <h1>Total cost:<t t-out="object.total_cost"/> </h1>
                         </div>
                     </div>
                     <br/>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="vehicle_management_user_group" model="ir.module.category">
+            <field name="name">Vehicle management</field>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="vehicle_management_technician" model="res.groups">
+            <field name="name">Technician</field>
+            <field name="category_id" ref="vehicle_management.vehicle_management_user_group"/>
+        </record>
+
+        <record id="vehicle_management_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="implied_ids" eval="[(4, ref('vehicle_management.vehicle_management_technician'))]"/>
+            <field name="category_id" ref="vehicle_management.vehicle_management_user_group"/>
+        </record>
+</odoo>

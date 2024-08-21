@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import datetime
 
 from odoo import api, Command, fields, models, _
@@ -27,7 +28,8 @@ class VehicleManagement(models.Model):
                                         ('done', 'Done'),
                                         ('cancelled', 'Cancelled'),
                                         ('paid', 'Paid')],
-                             default='draft', required=True, tracking=True)
+                             default='draft', required=True, tracking=True, compute="_compute_ready_for_delivery",
+                             store=True)
     phone = fields.Char(related='partner_id.phone', string="Phone", readonly=False)
     vehicle_number = fields.Char(string="Vehicle number", copy=False, required=True)
     image = fields.Image(string="Image")
@@ -49,20 +51,23 @@ class VehicleManagement(models.Model):
     color = fields.Integer('Color Index', default=0)
     labour_line_ids = fields.One2many('vehicle.employee', 'managing_id')
     product_line_ids = fields.One2many('vehicle.product', 'management_id')
-    total_product_cost = fields.Monetary(string="Total cost", readonly=True, default=0.0)
-    total_time_cost = fields.Monetary(string="Total cost", readonly=True, default=0.0)
+    total_product_cost = fields.Monetary(string="Total cost", readonly=True, default=0.0,
+                                         compute="_compute_total_product_cost")
+    total_time_cost = fields.Monetary(string="Total cost", readonly=True, default=0.0,
+                                      compute="_compute_total_time_cost")
     total_cost = fields.Monetary(string="Total cost", default=0.0)
     estimated_delivery_date = fields.Date(string="Estimated delivery date")
     smart_invoice = fields.Integer(compute='compute_invoice_count')
     invoice_id = fields.Many2one('account.move', string="Invoice", store=True)
     invoice_status = fields.Selection(related='invoice_id.state')
-    paid_status = fields.Char(compute="change_payment_state")
+    paid_status = fields.Char(compute="_compute_change_payment_state")
 
     def compute_invoice_count(self):
-        for record in self:
-            record.smart_invoice = len(record.invoice_id)
+        """ To count the number of invoice of a customer on a vehicle service form to set inside the smart button"""
+        self.smart_invoice = len(self.invoice_id)
 
     def action_get_invoice_record(self):
+        """ To return a form view of invoice while clicking the smart button inside the service form """
         if self.invoice_id:
             return {
                 'type': 'ir.actions.act_window',
@@ -73,6 +78,8 @@ class VehicleManagement(models.Model):
             }
 
     def calculate_delivery_date(self):
+        """ To set the delivery date inside the delivery_date field and change the state to 'done' while clicking the
+            done button"""
         self.delivery_date = datetime.date.today()
         self.write({
             'state': 'done'
@@ -80,45 +87,69 @@ class VehicleManagement(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        """ To create vehicle service form sequence """
         for vals in vals_list:
             if vals.get('name', _('New')) == _('New'):
                 vals['name'] = self.env['ir.sequence'].next_by_code('vehicle.reference')
         return super().create(vals_list)
 
-    def confirm_button(self):
+    def action_confirm_button(self):
+        """ to change the state of vehicle service form to 'progress' while clicking the 'confirm' button"""
         self.write({
             'state': "progress"
         })
 
-    def ready_to_delivery(self):
+    def action_ready_to_delivery(self):
+        """ to change the state of vehicle service form to 'ready for delivery' while clicking the
+        'ready for delivery button' button"""
         self.write({
             'state': "ready for delivery"
         })
 
+    def action_to_cancel(self):
+        """ to change the state of vehicle service form to 'cancelled' while clicking the 'confirm' button"""
+        self.write({
+            'state': "cancelled"
+        })
+
+    def action_move_to_draft(self):
+        """ to change the state of vehicle service form to 'draft' while clicking the 'move to draft' button"""
+        self.write({
+            'state': "draft"
+        })
+
     @api.constrains('vehicle_number', 'start_date', 'partner_id')
     def _check_vehicle_unique(self):
+        """ To check the vehicle number is unique based on customer and start_date"""
         for record in self:
             existing_vehicle = self.search([
                 ('vehicle_number', '=', record.vehicle_number),
                 ('start_date', '=', record.start_date),
                 ('partner_id', '=', record.partner_id.id),
             ])
+            print(existing_vehicle)
             if len(existing_vehicle) > 1:
                 raise ValidationError('This Vehicle number is invalid.')
 
-    @api.onchange('product_line_ids')
-    def _total_product_cost(self):
+    @api.depends('product_line_ids')
+    def _compute_total_product_cost(self):
+        """ To compute the vehicle product total cost """
         self.total_product_cost = sum(self.product_line_ids.mapped('product_sub_total'))
 
-    @api.onchange('labour_line_ids')
-    def _total_time_product_cost(self):
+    @api.depends('labour_line_ids')
+    def _compute_total_time_cost(self):
+        """ To compute the labour total cost """
         self.total_time_cost = sum(self.labour_line_ids.mapped('sub_total_time_cost'))
 
     @api.onchange('total_time_cost', 'total_product_cost')
     def _total_cost(self):
+        """ To compute the total cost
+             total_cost = total_time_cost + total_product_cost """
         self.total_cost = self.total_time_cost + self.total_product_cost
 
     def action_create_invoice(self):
+        """ To create a new invoice for the customer and if the invoice is not paid while creating the invoice  again
+        for that particular customer the products in the new service form will append with the existing invoice  """
         existing_invoice = self.env['account.move'].search([
                 ('partner_id', '=', self.partner_id.id),
                 ('move_type', '=', 'out_invoice'),
@@ -132,7 +163,8 @@ class VehicleManagement(models.Model):
                                                     'quantity': record.quantity,
                                                     }))
             for record in self.labour_line_ids:
-                invoice_vals.append(Command.create({'product_id': self.env.ref('vehicle_management.vehicle_labour_product_product').id,
+                invoice_vals.append(Command.create({'product_id':
+                                                    self.env.ref('vehicle_management.vehicle_labour_product_product').id,
                                                     'name': record.labor_id.name,
                                                     'price_unit': record.hourly_cost,
                                                     'quantity': record.time_spent,
@@ -159,7 +191,8 @@ class VehicleManagement(models.Model):
                                                     'quantity': record.quantity,
                                                     }))
             for record in self.labour_line_ids:
-                invoice_vals.append(Command.create({'product_id': self.env.ref('vehicle_management.vehicle_labour_product_product').id,
+                invoice_vals.append(Command.create({'product_id':
+                                                    self.env.ref('vehicle_management.vehicle_labour_product_product').id,
                                                     'name': record.labor_id.name,
                                                     'price_unit': record.hourly_cost,
                                                     'quantity': record.time_spent,
@@ -183,32 +216,31 @@ class VehicleManagement(models.Model):
               'view_id': self.env.ref('account.view_move_form').id,
             }
 
-    def change_payment_state(self):
-        for record in self:
-            record.paid_status = record.invoice_id.payment_state
-            if record.paid_status == 'paid':
-                record.write({
-                    'state': "paid"
+    def _compute_change_payment_state(self):
+        """ To change the state of the service form to 'paid' while changing the payment state of the invoice to
+            'paid'"""
+        self.paid_status = self.invoice_id.payment_state
+        if self.paid_status == 'paid':
+            self.write({
+                'state': "paid"
                 })
 
-    @api.onchange('state')
-    def check_ready_for_delivery(self):
+    @api.constrains('state')
+    def _compute_ready_for_delivery(self):
+        """ To call the action_send_mail while changing the state of the service form to 'ready for delivery'"""
         if self.state == 'ready for delivery':
             self.action_send_mail()
 
     def action_send_mail(self):
-        mail_template = self.env.ref("vehicle_management.mail_template_blog")
+        """ To send the email to customer"""
+        mail_template = self.env.ref("vehicle_management.vehicle_delivery_mail_template")
         mail_template.send_mail(self.id, force_send=True)
 
     def vehicle_form_archive(self):
+        """ For scheduled action , if the service form is in the 'cancelled' state for 1 month it will automatically
+            archive"""
         for record in self.search([('state', '=', 'cancelled'),
                                    ('start_date', '<=', datetime.date.today() - datetime.timedelta(30))]):
             record.action_archive()
-
-    # def customer_archive(self):
-    #     archived_customer = self.env['res.partner'].search([('active', '=', False)])
-    #     res = super().action_archive()
-
-
 
 
