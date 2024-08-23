@@ -2,6 +2,8 @@
 
 import datetime
 
+from datetime import timedelta
+
 from odoo import api, Command, fields, models, _
 
 from odoo.exceptions import ValidationError
@@ -37,7 +39,7 @@ class VehicleManagement(models.Model):
                              required=True,
                              default=fields.Date.today())
     duration_time = fields.Integer(string="Duration")
-    delivery_date = fields.Date(string="Delivery date")
+    delivery_date = fields.Date(string="Delivery date", readonly=True)
     service_type = fields.Selection([('paid', 'Paid'), ('free', 'Free')], default="paid")
     estimated_amount = fields.Float(string="Estimated amount")
     customer_complaint = fields.Text(string="Complaint")
@@ -61,6 +63,7 @@ class VehicleManagement(models.Model):
     invoice_id = fields.Many2one('account.move', string="Invoice", store=True)
     invoice_status = fields.Selection(related='invoice_id.state')
     paid_status = fields.Char(compute="_compute_change_payment_state")
+    color_change = fields.Char(string="Color", default=0, store=True)
 
     def compute_invoice_count(self):
         """ To count the number of invoice of a customer on a vehicle service form to set inside the smart button"""
@@ -237,10 +240,26 @@ class VehicleManagement(models.Model):
         mail_template.send_mail(self.id, force_send=True)
 
     def vehicle_form_archive(self):
-        """ For scheduled action , if the service form is in the 'cancelled' state for 1 month it will automatically
+        """ For scheduled action, if the service form is in the 'cancelled' state for 1 month it will automatically
             archive"""
         for record in self.search([('state', '=', 'cancelled'),
                                    ('start_date', '<=', datetime.date.today() - datetime.timedelta(30))]):
             record.action_archive()
 
+    def update_customer_stage(self):
+        """Function for automation rule to change the customer state"""
+        for record in self.env['vehicle.management'].search([('partner_id', '=', self.id)]):
+            record.customer_state = 'service customer'
 
+    def vehicle_record_color_change(self):
+        """ For scheduled action, if the estimated delivery date is today and the state is in progress
+        change the record color to red, if it's tomorrow then orange"""
+        for today_delivery in self.search([('estimated_delivery_date', '=', datetime.date.today()),
+                                           ('state', '=', 'progress')]):
+            if today_delivery:
+                today_delivery.color_change = 'red'
+
+        for tomorrow_delivery in self.search([('estimated_delivery_date', '=', datetime.date.today() + datetime.timedelta(1)),
+                                              ('state', '=', 'progress')]):
+            if tomorrow_delivery:
+                tomorrow_delivery.color_change = 'orange'
