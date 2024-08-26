@@ -12,7 +12,7 @@
 
     <record id="vehicle_management_manager" model="res.groups">
         <field name="name">Manager</field>
-        <field name="implied_ids" eval="[(4, ref('vehicle_management.vehicle_management_technician'))]"/>
+        <field name="implied_ids" eval="[Command.link(ref('vehicle_management.vehicle_management_technician'))]"/>
         <field name="category_id" ref="vehicle_management.vehicle_management_user_group"/>
     </record>
 
@@ -25,13 +25,13 @@
     </record>
 
     <record id="base.default_user" model="res.users">
-        <field name="groups_id" eval="[(4,ref('vehicle_management.vehicle_management_technician'))]"/>
+        <field name="groups_id" eval="[Command.link(ref('vehicle_management.vehicle_management_technician'))]"/>
     </record>
 
     <record id="vehicle_management_technician_visibility" model="ir.rule">
         <field name="name">Technician can only see his/her service</field>
         <field name="model_id" ref="model_vehicle_management"/>
-        <field name="groups" eval="[(4, ref('vehicle_management.vehicle_management_technician'))]"/>
+        <field name="groups" eval="[Command.link(ref('vehicle_management.vehicle_management_technician'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="True"/>
         <field name="perm_create" eval="True"/>
