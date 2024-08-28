@@ -7,13 +7,16 @@
 
     <record id="vehicle_management_technician" model="res.groups">
         <field name="name">Technician</field>
-        <field name="category_id" ref="vehicle_management.vehicle_management_user_group"/>
+        <field name="category_id"
+               ref="vehicle_management.vehicle_management_user_group"/>
     </record>
 
     <record id="vehicle_management_manager" model="res.groups">
         <field name="name">Manager</field>
-        <field name="implied_ids" eval="[Command.link(ref('vehicle_management.vehicle_management_technician'))]"/>
-        <field name="category_id" ref="vehicle_management.vehicle_management_user_group"/>
+        <field name="implied_ids"
+               eval="[Command.link(ref('vehicle_management.vehicle_management_technician'))]"/>
+        <field name="category_id"
+               ref="vehicle_management.vehicle_management_user_group"/>
     </record>
 
     <record id="vehicle_management_company_visible" model="ir.rule">
@@ -25,13 +28,15 @@
     </record>
 
     <record id="base.default_user" model="res.users">
-        <field name="groups_id" eval="[Command.link(ref('vehicle_management.vehicle_management_technician'))]"/>
+        <field name="groups_id"
+               eval="[Command.link(ref('vehicle_management.vehicle_management_technician'))]"/>
     </record>
 
     <record id="vehicle_management_technician_visibility" model="ir.rule">
         <field name="name">Technician can only see his/her service</field>
         <field name="model_id" ref="model_vehicle_management"/>
-        <field name="groups" eval="[Command.link(ref('vehicle_management.vehicle_management_technician'))]"/>
+        <field name="groups"
+               eval="[Command.link(ref('vehicle_management.vehicle_management_technician'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="True"/>
         <field name="perm_create" eval="True"/>
@@ -42,6 +47,7 @@
     <record id="vehicle_management_manger_visibility" model="ir.rule">
         <field name="name">Manager has all rights on vehicle management</field>
         <field name="model_id" ref="model_vehicle_management"/>
-        <field name="groups" eval="[Command.link(ref('vehicle_management_manager'))]"/>
+        <field name="groups"
+               eval="[Command.link(ref('vehicle_management_manager'))]"/>
     </record>
 </odoo>

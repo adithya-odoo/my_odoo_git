@@ -5,7 +5,7 @@
             <field name="res_model">repair.tag</field>
            <field name="view_mode">tree,form,kanban</field>
     </record>
-    <record id="repair_tags_view" model="ir.ui.view">
+    <record id="repair_tags_view_form" model="ir.ui.view">
         <field name="name">Repair tag</field>
         <field name="model">repair.tag</field>
         <field name="arch" type="xml">
@@ -15,6 +15,8 @@
         </tree>
         </field>
     </record>
-    <menuitem id="vehicle_configuration_menu" name="Configuration" parent="vehicle_management_menu"/>
-    <menuitem id="repair_tag_menu" name="Repair" parent="vehicle_configuration_menu" action="repair_tag_action"/>
+    <menuitem id="vehicle_configuration_menu" name="Configuration"
+              parent="vehicle_management_menu"/>
+    <menuitem id="repair_tag_menu" name="Repair"
+              parent="vehicle_configuration_menu" action="repair_tag_action"/>
 </odoo>

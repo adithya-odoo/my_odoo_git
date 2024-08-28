@@ -6,12 +6,12 @@
         <field name="model">example.line</field>
         <field name="arch" type="xml">
             <tree editable="bottom">
-                                    <field name="product_id"/>
-                                    <field name="quantity"/>
-                                    <field name="price"/>
-                                    <field name="example_id"/>
-                                    <field name="example_example_id"/>
-                                </tree>
+                <field name="product_id"/>
+                <field name="quantity"/>
+                <field name="price"/>
+                <field name="example_id"/>
+                <field name="example_example_id"/>
+            </tree>
         </field>
     </record>
 

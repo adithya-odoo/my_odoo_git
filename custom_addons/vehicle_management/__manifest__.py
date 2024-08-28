@@ -18,9 +18,6 @@
     ],
 
     'data': [
-        'views/vehicle_management_views.xml',
-        'views/customer.xml',
-        'views/repair_tag_views.xml',
         'data/load_data.xml',
         'data/labour_product.xml',
         'data/email_template.xml',
@@ -28,6 +25,9 @@
         'data/state_changing_automation_rule.xml',
         'security/vehicle_management_security.xml',
         'security/ir.model.access.csv',
+        'views/vehicle_management_views.xml',
+        'views/customer.xml',
+        'views/repair_tag_views.xml',
     ],
 
     'license': 'LGPL-3',

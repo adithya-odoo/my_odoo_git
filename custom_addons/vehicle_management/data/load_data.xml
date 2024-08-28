@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <data noupdate="0">
+    <data noupdate="1">
         <record id="vehicle_load_data_1" model="fleet.vehicle.model.category">
             <field name="name">Desire</field>
         </record>
-         <record id="vehicle_load_data_2" model="fleet.vehicle.model.category">
+        <record id="vehicle_load_data_2" model="fleet.vehicle.model.category">
             <field name="name">jeep</field>
         </record>
     </data>

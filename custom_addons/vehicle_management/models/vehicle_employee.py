@@ -7,16 +7,22 @@ class VehicleEmployee(models.Model):
     _name = "vehicle.employee"
     _description = "Vehicle Employee"
 
-    managing_id = fields.Many2one('vehicle.management', 'Managing id')
-    labor_id = fields.Many2one('hr.employee', "Labour", store=True)
-    product_id = fields.Many2one('product.product', "Product",
-                                 domain="[('detailed_type', 'in', ['service'])]", store=True)
-    company_id = fields.Many2one('res.company', store=True, copy=False, string="Company")
+    managing_id = fields.Many2one(comodel_name='vehicle.management',
+                                  string='Managing id')
+    labor_id = fields.Many2one(comodel_name='hr.employee', string="Labour",
+                               store=True)
+    product_id = fields.Many2one(comodel_name='product.product',
+                                 string="Product",
+                                 domain="[('detailed_type', 'in', ['service'])]",
+                                 store=True)
+    company_id = fields.Many2one(comodel_name='res.company', store=True,
+                                 copy=False, string="Company")
     currency_id = fields.Many2one('res.currency', string="Currency",
                                   related='company_id.currency_id',
                                   default=lambda self: self.env.user.company_id.currency_id.id)
-    hourly_cost = fields.Monetary('Hourly Cost', related="labor_id.hourly_cost", currency_field='currency_id',
-                                  default=0.0)
+    hourly_cost = fields.Monetary('Hourly Cost',
+                                  related="labor_id.hourly_cost",
+                                  currency_field='currency_id', default=0.0)
     time_spent = fields.Integer(string="Time Spent", default=1)
     sub_total_time_cost = fields.Monetary(string="Sub total cost", default=0.0)
 
