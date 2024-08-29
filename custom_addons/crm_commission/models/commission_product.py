@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-
 from odoo import api, fields, models
+from odoo.addons.test_convert.tests.test_env import record
 
 
 class CommissionProduct(models.Model):
@@ -29,4 +29,9 @@ class CommissionProduct(models.Model):
     def compute_max_amount(self):
         """ To calculate the max_commission_amount
             commission amount = product_price * percentage"""
-        self.max_commission_amount = self.product_id.list_price * self.rate_percentage
+        for rec in self:
+            rec.max_commission_amount = rec.product_id.list_price * rec.rate_percentage
+
+
+
+

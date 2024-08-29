@@ -29,11 +29,14 @@ class CommissionGraduated(models.Model):
     @api.depends('from_amount', 'to_amount', 'commission')
     def compute_calculate_rate(self):
         """To calculate the total rate"""
-        total_amount = self.from_amount + self.to_amount
-        self.rate = total_amount * self.commission
+        for rec in self:
+            total_amount = rec.from_amount + rec.to_amount
+            rec.rate = total_amount * rec.commission
 
     @api.constrains('from_amount', 'to_amount')
     def onchange_from_to_amount(self):
-        if self.to_amount < self.from_amount:
-            raise ValidationError(
-                'To amount should not be smaller than from amount')
+        """ To check the To amount is larger than From amount """
+        for rec in self:
+            if rec.to_amount < rec.from_amount:
+                raise ValidationError(
+                             'To amount should not be smaller than from amount')

@@ -57,7 +57,8 @@
                                 </tree>
                             </field>
                         </page>
-                         <page string="Graduated" invisible="revenue_wise != 'graduated'">
+                         <page string="Graduated" invisible="revenue_wise != 'graduated' or
+                                                             type == 'product wise'">
                             <field name="graduated_ids" widget="subtasks_one2many">
                                 <tree editable="bottom">
                                     <field name="from_amount"/>
