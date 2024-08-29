@@ -1,5 +1,4 @@
-from itertools import product
-from xmlrpc.client import boolean
+# -*- coding: utf-8 -*-
 
 from odoo import Command, models
 

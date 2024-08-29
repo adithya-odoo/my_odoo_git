@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models
-from odoo.addons.test_convert.tests.test_env import record
+
+from odoo.exceptions import ValidationError
 
 
 class CommissionProduct(models.Model):
@@ -31,6 +32,14 @@ class CommissionProduct(models.Model):
             commission amount = product_price * percentage"""
         for rec in self:
             rec.max_commission_amount = rec.product_id.list_price * rec.rate_percentage
+
+    @api.constrains('product_id')
+    def check_exist_product(self):
+        line_ids = 0
+        for line in self:
+            line_ids = self.search([('product_id', '=', line.product_id.name), ('id', '!=', line.id)])
+        if line_ids:
+            raise ValidationError('Product Exist')
 
 
 

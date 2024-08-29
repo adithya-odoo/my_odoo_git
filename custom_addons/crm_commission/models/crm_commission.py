@@ -58,21 +58,3 @@ class CrmCommission(models.Model):
         """ To check the To amount is larger than From amount """
         if self.to_amount < self.from_amount:
             raise ValidationError('To amount should not be smaller than from amount')
-
-    @api.constrains ('product_ids')
-    def onchange_product(self):
-        """ If the product already existed inside the product_ids line cant
-        select the product again"""
-        existing_product = self.product_ids.product_id.mapped('id')
-        product = self.search([('product_ids', '=', 'deposit')],limit=1, order='create_date desc')
-        print(product)
-        print(existing_product)
-        for line in self.product_ids:
-            if line.product_id.id in existing_product:
-                print("hello")
-
-        # rec = []
-        # for record in self.product_ids:
-        #     rec.append(record.product_id.id)
-        #     if record in rec:
-        #         raise ValidationError("same products not allowed")

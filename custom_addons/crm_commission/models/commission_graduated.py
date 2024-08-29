@@ -38,5 +38,4 @@ class CommissionGraduated(models.Model):
         """ To check the To amount is larger than From amount """
         for rec in self:
             if rec.to_amount < rec.from_amount:
-                raise ValidationError(
-                             'To amount should not be smaller than from amount')
+                raise ValidationError('To amount should not be smaller than from amount')
