@@ -12,8 +12,11 @@
     ],
 
     'data': [
+        'security/ir.model.access.csv',
         'views/res_partner.xml',
+        'views/warning_wizard.xml',
         'views/sale_order_line.xml',
+        'views/purchase_order.xml',
     ],
 
     'license': 'LGPL-3',
