@@ -23,6 +23,8 @@
         'data/email_template.xml',
         'data/ir_cron_data.xml',
         'data/state_changing_automation_rule.xml',
+        'report/ir_actions_report.xml',
+        'report/vehicle_report.xml',
         'security/vehicle_management_security.xml',
         'security/ir.model.access.csv',
         'views/vehicle_management_views.xml',
