@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<data noupdate="1">
+    <record id="archiving_actions" model="ir.cron">
+        <field name="name">Archive the service</field>
+        <field name="model_id" ref="vehicle_management.model_vehicle_management"/>
+        <field name="state">code</field>
+        <field name="code">model.vehicle_form_archive()</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+    </record>
+    <record id="record_color_change" model="ir.cron">
+        <field name="name">Change the record color</field>
+        <field name="model_id" ref="vehicle_management.model_vehicle_management"/>
+        <field name="state">code</field>
+        <field name="code">model.vehicle_record_color_change()
+        </field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        </record>
+</data>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="vehicle_labour_product_product" model="product.product">
+             <field name="name">service product</field>
+            <field name="type">service</field>
+            <field name="sale_line_warn">no-message</field>
+        </record>
+    </data>
+</odoo>

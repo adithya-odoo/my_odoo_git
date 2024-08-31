@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="customer_action" model="ir.actions.act_window">
+        <field name="name">Customer</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.view_partner_form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button id="create_service" type="object"
+                            name="get_vehicle_management_form_view"
+                            string="Create service form" class="oe_highlight"
+                     context="{'default_partner_id': id}"/>
+                    <field name="customer_state" widget="statusbar"
+                           statusbar_visible="non service customer,
+                                              service customer"/>
+                </header>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button"
+                         type="object"
+                         icon="fa-taxi"
+                         name="action_get_vehicles_record">
+                        <field string="Customer" name="smart_partner"
+                               widget="statinfo"/>
+                    </button>
+            </xpath>
+        </field>
+    </record>
+    <menuitem id="customer_menu" name="Customer" parent="vehicle_management_menu"
+              action="customer_action"/>
+</odoo>

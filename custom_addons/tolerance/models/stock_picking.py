@@ -43,11 +43,16 @@ class SalePicking(models.Model):
 
             for record in self.move_ids_without_package:
                 if record.quantity < lower_quantity or record.quantity > upper_quantity:
+                    purchase_order = self.env['purchase.order'].search(
+                                            [('name', '=', self.origin)])
+                    for line in purchase_order.order_line:
+                        tolerance = line.tolerance
                     return {'type': 'ir.actions.act_window',
                             'name': 'Delivery Warning',
                             'res_model': 'warning.wizard',
                             'target': 'new',
                             'view_mode': 'form',
                             'view_type': 'form',
+                            'context': {'default_tolerance': tolerance}
                             }
         return res

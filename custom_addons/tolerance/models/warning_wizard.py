@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models
-from odoo.tools.populate import compute
 
 
 class WarningWizard(models.TransientModel):
@@ -9,6 +8,7 @@ class WarningWizard(models.TransientModel):
    _name = 'warning.wizard'
    _description = "Warning Wizard"
 
+   tolerance = fields.Float(string="Tolerance", readonly=True)
 
    def action_accept(self):
       """ Accept the delivery through wizard """
@@ -23,4 +23,5 @@ class WarningWizard(models.TransientModel):
       self.env['stock.picking'].browse(pick_id).write({
          'state' : 'cancel'
       })
+
 

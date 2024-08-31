@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.team.crm.commission.id.inherit</field>
+        <field name="model">crm.team</field>
+        <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='alias_contact']" position="after">
+                    <field name="crm_commission_id"/>
+            </xpath>
+            <xpath expr="//page[@name='members_users']" position="after">
+                <page name="Commission" string="Commission">
+                    <field name="team_commission_ids" widget="subtasks_one2many">
+                        <tree editable="bottom">
+                            <field name="commission_name"/>
+                            <field name="currency_id" invisible="1" nolabel="1"/>
+                            <field name="sale_amount"/>
+                            <field name="rate"/>
+                            <field name="commission" widget="percentage"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

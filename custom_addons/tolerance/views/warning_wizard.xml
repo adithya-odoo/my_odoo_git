@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-   <!-- Odoo View Definition for Whatsapp Message Form -->
    <record id="delivery_warning_wizard_view_form" model="ir.ui.view">
        <field name="name">delivery.warning.wizard.view.form</field>
        <field name="model">warning.wizard</field>
@@ -8,11 +7,14 @@
        <field name="arch" type="xml">
            <form string="Warning">
               <h2>
-                   This delivery won't allow!!
+                   your tolerance is <field name="tolerance" widget="percentage"/>
+                  Do you want to Accept/Reject
               </h2>
                <footer>
-                   <button name="action_accept" string="Accept" type="object"/>
-                   <button name="action_reject" string="Reject" type="object"/>
+                   <button name="action_accept" string="Accept" type="object"
+                           class="btn btn-success"/>
+                   <button name="action_reject" string="Reject" type="object"
+                                                class="btn btn-danger"/>
                    <button name="action_reject" string="Cancel" special="cancel"/>
                </footer>
            </form>
