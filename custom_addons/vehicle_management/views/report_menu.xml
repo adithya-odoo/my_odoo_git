@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="date_filter_action" model="ir.actions.act_window">
+        <field name="name">Date filter</field>
+        <field name="res_model">date.filter</field>
+        <field name="target">new</field>
+        <field name="view_mode">form</field>
+    </record>
+    <menuitem id="vehicle_reporting_menu" name="Reporting"
+              parent="vehicle_management_menu"/>
+    <menuitem id="date_filter_menu" name="Date" parent="vehicle_reporting_menu"
+              action="date_filter_action"/>
+</odoo>

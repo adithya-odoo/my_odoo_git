@@ -52,6 +52,7 @@ class SalePicking(models.Model):
                                             [('name', '=', self.origin)])
                     for line in purchase_order.order_line:
                         tolerance = line.tolerance
+
                     return {'type': 'ir.actions.act_window',
                             'name': 'Delivery Warning',
                             'res_model': 'warning.wizard',
