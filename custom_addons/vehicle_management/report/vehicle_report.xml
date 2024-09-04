@@ -7,18 +7,18 @@
                    <div class="oe_structure"/>
                    <h2>Vehicle Report</h2>
                        <t t-foreach="report" t-as="rep">
-                           <t t-if="rep.get('advisor_len') == True">
-                               <t t-if="rep['advisor_len'] &lt; 2 and rep['advisor_len'] &gt; 0">
-                                   <t t-esc="rep['advisor']"/>
-                                   <br/>
+                            <t t-if="rep['customer_len']">
+                                <t t-if="rep['customer_len'] &lt; 2 ">
+                                    <t t-esc="rep['customer_name']"/>
+                                </t>
+                            </t>
+                       </t>
+                       <t t-foreach="report" t-as="repo">
+                           <t t-if="repo['advisor_len']">
+                               <t t-if="repo['advisor_len'] &lt; 2 ">
+                                   <t t-esc="repo['advisor']"/>
                                </t>
                            </t>
-                            <t t-if="rep.get('customer_len') == True">
-                           <t t-if="rep['customer_len'] &lt; 2  and rep['customer_len'] &gt; 0">
-                               <t t-esc="rep['customer_name']"/>
-                               <br/>
-                           </t>
-                            </t>
                        </t>
                    <table class="table table-bordered">
                            <thead>
@@ -26,22 +26,22 @@
                                    <th>Vehicle Model</th>
                                    <th>Vehicle Number</th>
                                    <t t-foreach="report" t-as="a">
-                                       <t t-if="a.get('advisor_len')">
+                                       <t t-if="a['advisor_len']">
                                            <t t-if="a['advisor_len'] &gt; 1">
                                                <th>Advisor</th>
                                            </t>
                                        </t>
-                                   <t t-else="a.get('customer_len') == False">
-                                       <th>Advisor</th>
-                                   </t>
-                                       <t t-if="a.get('customer_len')">
-                                           <t t-if="a['customer_len'] &gt; 1">
+                                       <t t-if="not a['advisor_len']">
+                                           <th>Advisor</th>
+                                       </t>
+                                       <t t-if="a['customer_len']">
+                                           <t t-if="a.get('customer_len') &gt; 1">
                                                <th>Customer</th>
                                            </t>
                                        </t>
-                                   <t t-else="a.get('customer_len') == False">
-                                       <th>Customer</th>
-                                   </t>
+                                       <t t-if="not a['customer_len']">
+                                           <th>Customer</th>
+                                       </t>
                                    </t>
                                    <th>Category</th>
                                    <th>State</th>
@@ -59,24 +59,26 @@
                               <td>
                                    <t t-esc="i['vehicle_number']"/>
                               </td>
-                              <t t-if="i.get('advisor_len')">
-                                  <t t-if="i['advisor_len'] &gt; 1">
+                              <t t-if="i['advisor_len']">
+                                  <t t-if="i.get('advisor_len') &gt; 1">
                                       <td>
                                           <t t-esc="i['advisor']"/>
                                       </td>
                                   </t>
                               </t>
-                              <t t-else="i.get('advisor_len') == False">
-                                  <t t-esc="i['advisor']"/>
+                              <t t-if="i.get('advisor_len') == 0">
+                                  <td>
+                                      <t t-esc="i['advisor']"/>
+                                  </td>
                               </t>
-                              <t t-if="i.get('customer_len')">
-                                  <t t-if="i['customer_len'] &gt; 1">
+                              <t t-if="i['customer_len']">
+                                  <t t-if="i.get('customer_len') &gt; 1">
                                       <td>
                                           <t t-esc="i['customer_name']"/>
                                       </td>
                                   </t>
                               </t>
-                              <t t-else="i.get('customer_len') == False">
+                              <t t-if="i.get('customer_len') == 0">
                                   <td>
                                       <t t-esc="i['customer_name']"/>
                                   </td>

@@ -31,8 +31,14 @@
         'views/customer.xml',
         'views/repair_tag_views.xml',
         'views/report_menu.xml',
-        'wizard/date_wizard.xml',
+        'wizard/filter_wizard.xml',
     ],
+
+    'assets':{
+         'web.assets_backend': [
+           'vehicle_management/static/src/js/**',
+          ],
+       },
 
     'license': 'LGPL-3',
 }
