@@ -6,41 +6,51 @@
                <div class="page">
                    <div class="oe_structure"/>
                    <h2>Vehicle Report</h2>
+                      <t t-set="flag" t-value="0"/>
                        <t t-foreach="report" t-as="rep">
-                            <t t-if="rep['customer_len']">
-                                <t t-if="rep['customer_len'] &lt; 2 ">
-                                    <t t-esc="rep['customer_name']"/>
-                                </t>
-                            </t>
-                       </t>
-                       <t t-foreach="report" t-as="repo">
-                           <t t-if="repo['advisor_len']">
-                               <t t-if="repo['advisor_len'] &lt; 2 ">
-                                   <t t-esc="repo['advisor']"/>
+                           <t t-if="flag == 0">
+                               <t t-if="rep['customer_len']">
+                                   <t t-if="rep['customer_len'] &lt; 2 ">
+                                       <t t-esc="rep['customer_name']"/>
+                                       <t t-set="flag" t-value="1"/>
+                                   </t>
+                               </t>
+                               <t t-if="rep['advisor_len']">
+                                   <t t-if="rep['advisor_len'] &lt; 2 ">
+                                       <t t-esc="rep['advisor']"/>
+                                       <t t-set="flag" t-value="1"/>
+                                   </t>
                                </t>
                            </t>
                        </t>
                    <table class="table table-bordered">
+                       <t t-set="thead" t-value="0"/>
                            <thead>
                                <tr>
                                    <th>Vehicle Model</th>
                                    <th>Vehicle Number</th>
                                    <t t-foreach="report" t-as="a">
-                                       <t t-if="a['advisor_len']">
-                                           <t t-if="a['advisor_len'] &gt; 1">
-                                               <th>Advisor</th>
+                                       <t t-if="thead == 0">
+                                           <t t-if="a['advisor_len']">
+                                               <t t-if="a['advisor_len'] &gt; 1">
+                                                   <th>Advisor</th>
+                                                   <t t-set="thead" t-value="1"/>
+                                               </t>
                                            </t>
-                                       </t>
-                                       <t t-if="not a['advisor_len']">
+                                           <t t-if="a['advisor_len'] == 0">
                                            <th>Advisor</th>
-                                       </t>
-                                       <t t-if="a['customer_len']">
-                                           <t t-if="a.get('customer_len') &gt; 1">
-                                               <th>Customer</th>
+                                               <t t-set="thead" t-value="1"/>
                                            </t>
-                                       </t>
-                                       <t t-if="not a['customer_len']">
-                                           <th>Customer</th>
+                                           <t t-if="a['customer_len']">
+                                               <t t-if="a.get('customer_len') &gt; 1">
+                                                   <th>Customer</th>
+                                                   <t t-set="thead" t-value="1"/>
+                                               </t>
+                                           </t>
+                                           <t t-if="a['customer_len'] == 0">
+                                               <th>Customer</th>
+                                               <t t-set="thead" t-value="1"/>
+                                           </t>
                                        </t>
                                    </t>
                                    <th>Category</th>

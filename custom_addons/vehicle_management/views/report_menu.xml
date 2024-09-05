@@ -8,6 +8,6 @@
     </record>
     <menuitem id="vehicle_reporting_menu" name="Reporting"
               parent="vehicle_management_menu"/>
-    <menuitem id="report_filter_menu" name="PDF Report" parent="vehicle_reporting_menu"
+    <menuitem id="report_filter_menu" name="Report" parent="vehicle_reporting_menu"
               action="report_filter_action"/>
 </odoo>

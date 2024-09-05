@@ -10,6 +10,5 @@
        <field name="binding_model_id" ref="vehicle_management.model_vehicle_management"/>
        <field name="binding_type">report</field>
    </record>
-
 </odoo>
 
