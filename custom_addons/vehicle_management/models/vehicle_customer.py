@@ -4,6 +4,7 @@ from odoo import fields, models
 
 
 class VehicleCustomer(models.Model):
+    """ To insert a new fields inside the res_partner """
     _inherit = 'res.partner'
 
     smart_partner = fields.Integer(compute='_compute_vehicle_history')

@@ -38,7 +38,7 @@ class VehicleManagement(models.Model):
                              compute="_compute_ready_for_delivery",
                              store=True)
     phone = fields.Char(related='partner_id.phone', string="Phone",
-                        readonly=False)
+                        readonly=False, store=True)
     vehicle_number = fields.Char(string="Vehicle number", copy=False,
                                  required=True)
     image = fields.Image(string="Image")

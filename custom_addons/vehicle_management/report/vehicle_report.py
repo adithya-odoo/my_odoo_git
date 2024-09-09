@@ -19,8 +19,6 @@ class VehiclePdfReport(models.AbstractModel):
 				    inner join fleet_vehicle_model_category as cat on cat.id = vm.vehicle_type_id
 					inner join res_partner as users on users.id =  (select partner_id from res_users where id = advisor_id)"""
 
-        # if data.get('start_date') and data.get('end_date'):
-        #     query += """ where start_date between '%s' and '%s' """% (data.get('start_date'), (data.get('end_date')))
         if data.get('start_date'):
             if data.get('start_date') and data.get('end_date'):
                 query += """ where start_date between '%s' and '%s' """ % (
@@ -42,13 +40,15 @@ class VehiclePdfReport(models.AbstractModel):
 
         self.env.cr.execute(query)
         report = self.env.cr.dictfetchall()
-
+        state_dict = dict(self.env['vehicle.management']._fields['state'].selection)
+        print(state_dict)
         for record in report:
             record['advisor_len'] = 0
             record['customer_len'] = 0
             record['vehicle_name'] = record.get('vehicle_name').capitalize()
-            record['state'] = record.get('state').capitalize()
             record['service_type'] = record.get('service_type').capitalize()
+            record['state_dict'] = state_dict
+        print(report)
 
         if data.get('advisor_ids'):
             for record in report:

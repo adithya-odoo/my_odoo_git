@@ -31,13 +31,18 @@
         'views/customer.xml',
         'views/repair_tag_views.xml',
         'views/report_menu.xml',
+        'views/order_website.xml',
+        'views/order_website_form.xml',
         'wizard/filter_wizard.xml',
     ],
 
     'assets':{
          'web.assets_backend': [
-           'vehicle_management/static/src/js/**',
+           'vehicle_management/static/src/js/action_manager.js',
           ],
+        'web.assets_frontend': [
+            'vehicle_management/static/src/js/website_eventlistener.js',
+        ]
        },
 
     'license': 'LGPL-3',

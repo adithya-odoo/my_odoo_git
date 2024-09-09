@@ -2,6 +2,7 @@
 import json
 
 import io
+from re import search
 
 import html2text
 
@@ -131,8 +132,9 @@ class ReportFilter(models.TransientModel):
          record['advisor_len'] = 0
          record['customer_len'] = 0
          record['vehicle_name'] = record.get('vehicle_name').capitalize()
-         record['state'] = record.get('state').capitalize()
          record['service_type'] = record.get('service_type').capitalize()
+
+      state_dict = dict(self.env['vehicle.management']._fields['state'].selection)
 
       if excel_data.get('advisor_ids'):
          for record in excel:
@@ -153,6 +155,8 @@ class ReportFilter(models.TransientModel):
       print(html2text.html2text(self.env.company.company_details))
       txt = workbook.add_format({'font_size': '10px', 'align': 'center'})
       # Sheet heading
+      cur = self.env.company.currency_id.symbol
+      print(cur)
       sheet.merge_range('D3:G4', 'VEHICLE MANAGEMENT', head)
       sheet.write('I1',str(datetime.date.today()), cell_format)
       sheet.merge_range('A1:C3',html2text.html2text(self.env.company.company_details), details)
@@ -196,16 +200,16 @@ class ReportFilter(models.TransientModel):
          sheet.write(row,column, rec['cat'], txt)
          column += 1
          sheet.write(5, column, 'State', cell_format)
-         sheet.write(row,column, rec['state'], txt)
+         sheet.write(row,column, state_dict[rec['state']], txt)
          column += 1
          sheet.write(5, column, 'Service Type', cell_format)
          sheet.write(row,column, rec['service_type'], txt)
          column += 1
          sheet.write(5, column, 'Cost', cell_format)
-         sheet.write(row,column, rec['cost'], txt)
+         sheet.write(row,column, cur+str(rec['cost']), txt)
          column += 1
          sheet.write(5, column, 'Estimated Amount', cell_format)
-         sheet.write(row,column, rec['estimated_amount'], txt)
+         sheet.write(row,column, cur+str(rec['estimated_amount']), txt)
          column += 1
          row += 1
 

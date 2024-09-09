@@ -8,6 +8,7 @@ from odoo.http import content_disposition, request
 from odoo.tools import html_escape
 
 class XLSXReportController(http.Controller):
+
    @http.route('/xlsx_reports', type='http', auth='user', methods=['POST'], csrf=False)
    def get_report_xlsx(self, model, options, output_format, report_name, **kw):
        uid = request.session.uid
