@@ -6,11 +6,11 @@ import { jsonrpc } from "@web/core/network/rpc_service";
 publicWidget.registry.repairform = publicWidget.Widget.extend({
     selector: '.order_website_form',
     events: {
-        'change select[name="vehicle_type_field"]': '_onTypeChange',
-
+        'change select[name="vehicle_type_field"]': 'onTypeChange',
     },
 
-    _onTypeChange: function(){
+    onTypeChange: function(){
+    $("#vehicle_field").empty();
     console.log($("#vehicle_type_field").val())
     var vehicle_type = $("#vehicle_type_field").val()
      jsonrpc("/web/dataset/call_kw", {
@@ -19,7 +19,6 @@ publicWidget.registry.repairform = publicWidget.Widget.extend({
             args: [[['category_id', '=', parseInt(vehicle_type)]]],
             kwargs: {},
         }).then(function(data) {
-            console.log("hello")
                 console.log(data.length)
                 for(let i=0; i<data.length; i++)
                 {
