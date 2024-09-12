@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import json
 
 from odoo import http
@@ -8,9 +9,10 @@ from odoo.http import content_disposition, request
 from odoo.tools import html_escape
 
 class XLSXReportController(http.Controller):
-
+   """ This class is for generate Excel report"""
    @http.route('/xlsx_reports', type='http', auth='user', methods=['POST'], csrf=False)
    def get_report_xlsx(self, model, options, output_format, report_name, **kw):
+       """ to pass value to the js file"""
        uid = request.session.uid
        report_obj = request.env[model].with_user(uid)
        options = json.loads(options)

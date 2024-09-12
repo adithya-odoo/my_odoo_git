@@ -11,6 +11,11 @@ access_vehicle_product_manager,access.vehicle.product,model_vehicle_product,vehi
 access_vehicle_employee_manager,access.vehicle.employee,model_vehicle_employee,vehicle_management_manager,1,1,1,1
 access_report_filter_manager,access.report.filter,model_report_filter,vehicle_management_manager,1,1,1,1
 
+fleet.fleet_vehicle_access_right_user,fleet_vehicle_access_right,fleet.model_fleet_vehicle,,1,1,1,1
+fleet.fleet_vehicle_model_access,fleet_vehicle_model_access_right,fleet.model_fleet_vehicle_model,,1,1,1,1
+fleet.fleet_vehicle_model_category,fleet_vehicle_model_brand_category,fleet.model_fleet_vehicle_model_category,,1,1,1,1
+
+
 
 
 

@@ -13,7 +13,7 @@ publicWidget.registry.repairform = publicWidget.Widget.extend({
     $("#vehicle_field").empty();
     console.log($("#vehicle_type_field").val())
     var vehicle_type = $("#vehicle_type_field").val()
-     jsonrpc("/web/dataset/call_kw", {
+     jsonrpc("/web/dataset/call_kw/fleet.vehicle.model/search_read", {
             model: 'fleet.vehicle.model',
             method: 'search_read',
             args: [[['category_id', '=', parseInt(vehicle_type)]]],

@@ -33,6 +33,8 @@
         'views/report_menu.xml',
         'views/order_website.xml',
         'views/order_website_form.xml',
+        'views/snippet.xml',
+        'views/home_snippet.xml',
         'wizard/filter_wizard.xml',
     ],
 
@@ -42,6 +44,9 @@
           ],
         'web.assets_frontend': [
             'vehicle_management/static/src/js/website_eventlistener.js',
+            'vehicle_management/static/src/js/repair_snippet.js',
+            'vehicle_management/static/src/xml/repair_snippet.xml',
+
         ]
        },
 

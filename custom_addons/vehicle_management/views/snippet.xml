@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="repair_snippet" inherit_id="website.snippets" name="Repair order snippet">
+        <xpath expr="//div[@id='snippet_effect']//t[@t-snippet][last()]"
+               position="after">
+            <t t-snippet="vehicle_management.repair_order_snippet_template"/>
+        </xpath>
+    </template>
+</odoo>
