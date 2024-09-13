@@ -12,7 +12,6 @@ class SalesOrder(models.Model):
         """ If the associated product is true it will add the associated product inside the customer form to order line """
         if self.associated_product == True:
             print(self.partner_id.associated_product_ids)
-        # for record in self.partner_id.associated_product_ids:
 
 
 

@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 <!--    template-->
-    <template id="repair_order_snippet_template" name="Repair snippet">
+    <template id="repair_order_snippet_template" name="Repair snippet" >
         <section class="repair_order_snippet">
-           <div class="ref-arrival-content">
-                <p class="ref-section_head ref-centerhead__underline ref-head--primary"
-                   style="color: #0d5272;">Repair order sj
-                </p>
-            </div>
+               <div class="ref-arrival-content">
+                </div>
             <div id="repair_order_carousel"/>
         </section>
     </template>
