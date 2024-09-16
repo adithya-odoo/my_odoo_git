@@ -22,8 +22,6 @@ publicWidget.registry.repairform = publicWidget.Widget.extend({
                 console.log(data.length)
                 for(let i=0; i<data.length; i++)
                 {
-                console.log(i)
-                console.log(data[i]['name'])
                 let optionHTML = `<option value="${data[i]['id']}">
                                                 ${data[i]['name']}</option>`;
                 $("#vehicle_field").append(optionHTML);

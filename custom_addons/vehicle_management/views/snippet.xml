@@ -3,7 +3,7 @@
     <template id="repair_snippet" inherit_id="website.snippets" name="Repair order snippet">
         <xpath expr="//div[@id='snippet_effect']//t[@t-snippet][last()]"
                position="after">
-            <t t-snippet="vehicle_management.repair_order_snippet_template" t-thumbnail="/website/static/src/img/snippets_thumbs/s_cover.svg"/>
+            <t t-snippet="vehicle_management.repair_order_snippet_template" t-thumbnail="/website/static/src/img/snippets_thumbs/s_dynamic_snippet.svg"/>
         </xpath>
     </template>
 </odoo>

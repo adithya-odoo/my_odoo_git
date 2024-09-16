@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from odoo.http import request, Controller, route, Response
-import random
 
 
 class DynamicSnippets(Controller):

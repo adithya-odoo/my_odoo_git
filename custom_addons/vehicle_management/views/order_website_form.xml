@@ -111,7 +111,8 @@
             <div class="modal-content">
             <div class="modal-header">
                 <form action="/customerform/submit"  method="post" enctype="multipart/form-data" class="js_accept_json modal-content js_website_submit_form">
-                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                    <input type="hidden" name="csrf_token"
+                           t-att-value="request.csrf_token()" />
                     <div class="col-sm" style="padding:5px">
                         <input id="img" type="file"
                             class="form-control s_website_form_input"
