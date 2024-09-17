@@ -15,7 +15,9 @@
     ],
 'assets': {
     'web.assets_frontend': [
-          'website_cart_remover/static/src/js/cart_remover.js',
+        'website_cart_remover/static/src/js/cart_remover.js',
+        'website_cart_remover/static/src/css/cart_remover.css',
+
     ],
 }
 }

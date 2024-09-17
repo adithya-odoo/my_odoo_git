@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo.http import request, Controller, route, Response
+from odoo.http import request, Controller, route
 
 
 class DynamicSnippets(Controller):

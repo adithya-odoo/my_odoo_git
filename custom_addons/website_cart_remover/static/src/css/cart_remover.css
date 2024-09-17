@@ -1,0 +1,11 @@
+.single_delete_btn{
+transition:0.3s;
+}
+
+.single_delete_btn:hover{
+color:red;
+}
+
+.dustbin-icon{
+font-size:36px;
+}

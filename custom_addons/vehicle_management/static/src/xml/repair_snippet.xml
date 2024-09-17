@@ -13,12 +13,12 @@
                                       <div class="card-group">
                                           <div class="card" style="width: 18rem; height:21rem; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); border: 1px solid #c9c9c9;">
                                               <t t-if="item.image == false">
-                                                  <img class="card-img-top"
+                                                  <img class="o_record_cover_component o_record_cover_image"
                                                        t-attf-src="https://png.pngtree.com/png-vector/20221125/ourmid/pngtree-no-image-available-icon-flatvector-illustration-thumbnail-graphic-illustration-vector-png-image_40966590.jpg"
-                                                       style="height:142px;"/>
+                                                           style="height:142px;"/>
                                               </t>
                                               <t t-else="">
-                                                  <img class="card-img-top"
+                                                  <img class="o_record_cover_component o_record_cover_image"
                                                        t-attf-src="data:image/jpeg;base64,{{item.image}}"
                                                        style="height:142px;"/>
                                               </t>

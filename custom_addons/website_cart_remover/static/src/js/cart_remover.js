@@ -1,19 +1,16 @@
 /** @odoo-module */
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { jsonrpc } from "@web/core/network/rpc_service";
 
-console.log('haiiii')
 publicWidget.registry.cartRemover = publicWidget.Widget.extend({
      selector:'.oe_cart',
      events: {
         'click .remove_cart_item' : '_onRemoveBtnClick',
     },
-
-    _onRemoveBtnClick:function(ev){
-    ev.preventDefault()
-     var newone = $('.o_cart_product').find('.js_quantity').val(0)
-     console.log(ev)
-//       newone.trigger('change');
-
-    }
-
+      _onRemoveBtnClick: function(){
+      jsonrpc("/shop/clear_cart", {}).then(function(){
+            location.reload();
+        });
+        return false;
+        }
 });

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="portal_repair_details" inherit_id="portal.portal_my_home"
+              name="Partner Details" customize_show="True">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+        <t t-set="portal_client_category_enable" t-value="True"/>
+        </xpath>
+            <div id="portal_client_category" position="inside">
+                <t t-call="portal.portal_docs_entry">
+                    <t t-set="title">Repair Details</t>
+                    <t t-set="url" t-value="'/my/repair'"/>
+                    <t t-set="placeholder_count" t-value="'repair_count'"/>
+                </t>
+            </div>
+    </template>
+</odoo>
