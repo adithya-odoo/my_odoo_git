@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from odoo.http import content_disposition, Controller, request, route
-
 from odoo import _
 
-from odoo.addons.portal.controllers.portal import CustomerPortal
+from odoo.http import request, route
 
+from odoo.exceptions import AccessError, MissingError, ValidationError
+
+from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 
 class PortalRepair(CustomerPortal):
    def _prepare_home_portal_values(self, counters):
-       print("port")
        values = super()._prepare_home_portal_values(counters)
        user = request.env.user.partner_id
        if 'repair_count' in counters:
@@ -24,14 +24,11 @@ class PortalRepair(CustomerPortal):
        return {
            'date': {'label': _('Order Date'), 'order': 'start_date desc'},
            'name': {'label': _('Reference'), 'order': 'name'},
-           'stage': {'label': _('Stage'), 'order': 'state'},
        }
    def _prepare_repair_portal_rendering_values(self, page=1, sortby=None, **kwargs):
        repair_order = request.env['vehicle.management']
-       print(repair_order)
        if not sortby:
            sortby = 'date'
-
        user = request.env.user.partner_id
        values = self._prepare_portal_layout_values()
 
@@ -51,7 +48,6 @@ class PortalRepair(CustomerPortal):
        repair = repair_order.search(domain, order=sort_order,
                                  limit=self._items_per_page,
                                  offset=pager_values['offset'])
-       print(repair)
 
        values.update({
            'repair':repair.sudo(),
@@ -64,8 +60,33 @@ class PortalRepair(CustomerPortal):
 
        return values
 
-   @route('/my/repair', type='http', auth="user", website=True)
+   @route(['/my/repair', '/my/repair/page/<int:page>'], type='http',
+          auth="user", website=True)
    def portal_repair(self, **kwargs):
        values = self._prepare_repair_portal_rendering_values(**kwargs)
-       return request.render("repair_portal.portal_repair", values)
+       return request.render("repair_portal.portal_my_repair_details", values)
+
+   @route(['/my/repair/<int:repair_id>'], type='http', auth="public",
+          website=True)
+   def portal_repair_page(self, repair_id,
+                          access_token=None, **kw):
+       try:
+           repair_sudo = self._document_check_access('vehicle.management', repair_id,
+                                                    access_token=access_token)
+       except (AccessError, MissingError):
+           return request.redirect('/my')
+
+       backend_url = f'/web#model={repair_sudo._name}' \
+                     f'&id={repair_sudo.id}' \
+                     f'&action={repair_sudo._get_portal_return_action().id}' \
+                     f'&view_type=form'
+       values = {
+           'repair_order': repair_sudo,
+           'backend_url': backend_url,
+       }
+
+       return request.render('repair_portal.repair_order_portal_template', values)
+
+
+
 

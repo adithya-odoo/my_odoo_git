@@ -10,7 +10,7 @@ from odoo.exceptions import ValidationError
 class VehicleManagement(models.Model):
     _name = "vehicle.management"
     _description = "Vehicle Management"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'portal.mixin']
 
     name = fields.Char(string='Reference', default=lambda self: _('New'),
                        copy=False,
@@ -291,3 +291,19 @@ class VehicleManagement(models.Model):
                                               ('state', '=', 'progress')]):
             if tomorrow_delivery:
                 tomorrow_delivery.color_change = 'orange'
+
+     # portal.mixin override
+    def _compute_access_url(self):
+        super()._compute_access_url()
+        for repair in self:
+            repair.access_url = f'/my/repair/{repair.id}'
+
+    def _get_portal_return_action(self):
+        """ Return the action used to display orders when returning from customer portal. """
+        self.ensure_one()
+        return self.env.ref('vehicle_management.vehicle_management_action')
+
+    def _get_name_portal_content_view(self):
+        """ This method can be inherited by localizations who want to localize the online repair view. """
+        self.ensure_one()
+        return 'vehicle_management.repair_order_portal_content'

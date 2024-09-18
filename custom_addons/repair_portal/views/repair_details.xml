@@ -1,16 +1,207 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+    <template id="portal_my_home_menu_repair" name="Portal layout : Repair menu entries"
+              inherit_id="portal.portal_breadcrumbs" priority="5">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li id="portal_breadcrumbs_repair" class="breadcrumb-item active" t-if="page_name == 'Repair Order'" >
+                <a t-if="repair_order" t-attf-href="/my/repair/?{{ keep_query() }}">Repair Order</a>
+                <t t-else="">Repair Order</t>
+            </li>
+             <li t-if="repair_order" class="breadcrumb-item active">
+                 <a t-if="repair_order" t-attf-href="/my/repair/?{{ keep_query() }}">Repair Order</a>
+                 / <t t-out="repair_order.name"/>
+             </li>
+        </xpath>
+    </template>
     <template id="portal_repair_details" inherit_id="portal.portal_my_home"
               name="Partner Details" customize_show="True">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
-        <t t-set="portal_client_category_enable" t-value="True"/>
+            <t t-set="portal_client_category_enable" t-value="True"/>
         </xpath>
             <div id="portal_client_category" position="inside">
                 <t t-call="portal.portal_docs_entry">
                     <t t-set="title">Repair Details</t>
                     <t t-set="url" t-value="'/my/repair'"/>
+                    <t t-set="text">Follow, view your repair orders</t>
                     <t t-set="placeholder_count" t-value="'repair_count'"/>
                 </t>
             </div>
     </template>
+
+     <template id="portal_my_repair_details" name="My Quotations">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Repair Order</t>
+            </t>
+            <div t-if="not repair" class="alert alert-warning" role="alert">
+                There are no repair orders.
+            </div>
+            <t t-if="repair" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Repair order #</th>
+                        <th class="text-end">Vehicle Number</th>
+                        <th class="text-end">Vehicle</th>
+                        <th class="text-end">Advisor</th>
+                        <th class="text-end">Start Date</th>
+                        <th class="text-end">Total</th>
+                        <th class="text-center"/>
+                    </tr>
+                </thead>
+                <t t-foreach="repair" t-as="order">
+                    <tr>
+                        <td>
+                            <a t-att-href="order.get_portal_url()">
+                                <t t-out="order.name"/>
+                            </a>
+                        </td>
+                        <td class="text-end"><span t-field="order.vehicle_number"/></td>
+                        <td class="text-end"><span t-field="order.vehicle_id"/></td>
+                        <td class="text-end"><span t-field="order.advisor_id"/></td>
+                        <td class="text-end"><span t-field="order.start_date"/></td>
+                        <td class="text-end"><span t-field="order.total_cost"/></td>
+                    </tr>
+                </t>
+            </t>
+        </t>
+    </template>
+
+     <template id="repair_order_portal_template" name="Repair Order"
+               inherit_id="portal.portal_sidebar" primary="True">
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+            <div class="row o_portal_sale_sidebar">
+                <!-- Sidebar -->
+                <t t-call="portal.portal_record_sidebar" id="repair_order_portal_sidebar">
+                    <t t-set="classes" t-value="'d-print-none col-lg-3 col-xl-4'"/>
+                    <t t-set="title">
+                        <h2 t-field="repair_order.total_cost" data-id="total_amount"/>
+                    </t>
+                    <t t-set="entries">
+                        <div class="d-flex flex-column gap-4">
+                            <div t-if="repair_order.advisor_id">
+                                <h6><small class="text-muted">Advisor</small></h6>
+                                <div class="o_portal_contact_details d-flex flex-column gap-2">
+                                    <div class="d-flex justify-content-start align-items-center gap-2">
+                                        <img class="o_avatar o_portal_contact_img rounded" t-att-src="image_data_uri(repair_order.advisor_id.avatar_128)" alt="Contact"/>
+                                        <div>
+                                            <h6 class="mb-0" t-out="repair_order.advisor_id.name"/>
+<!--                                            <a href="#discussion" class="d-flex align-items-center gap-2 small fw-bold">-->
+<!--                                                Send message-->
+<!--                                            </a>-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+                <div id="repair_content" class="col-12 col-lg-9 col-xl-8 mt-5 mt-lg-0">
+                                          <!-- main content -->
+                    <div id="introduction" t-attf-class="#{'border-bottom-0 pt-0 pb-3 bg-white' if report_type == 'html' else ''}">
+                        <div class="row" id="intro_row">
+                            <h3 class="my-0 col-12 col-lg flex-grow-1 mb-1 mb-lg-0">
+                                Repair Order -
+                                <em t-out="repair_order.name"/>
+                            </h3>
+                        </div>
+                    </div>
+                    <div id="repair_info" class="col-12 col-lg-6 mb-4">
+                    <span id="repair_info_title">
+                        <h4 class="mb-1">Repair Information</h4>
+                        <hr class="mt-1 mb-2"/>
+                    </span>
+                    <table class="table table-borderless table-sm">
+                        <tbody style="white-space:nowrap" id="repair_info_table">
+                            <tr>
+                                <th class="ps-0 pb-0">Date:</th>
+                                <td class="w-100 pb-0 text-wrap">
+                                    <span t-field="repair_order.start_date" t-options='{"widget": "date"}'/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0 pb-0">Vehicle Number:</th>
+                                <td class="w-100 pb-0 text-wrap"><span t-field="repair_order.vehicle_number"/></td>
+                            </tr>
+                             <tr>
+                                <th class="ps-0 pb-0">Vehicle Name:</th>
+                                <td class="w-100 pb-0 text-wrap"><span t-field="repair_order.vehicle_id"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+
+                    <t t-if="repair_order.product_line_ids">
+                    <div class="table-responsive">
+                    <table t-att-data-order-id="repair_order.id" t-att-data-token="repair_order.access_token" class="table table-sm" id="sales_order_table">
+                        <thead class="bg-100">
+                            <tr>
+                                <th class="text-start" id="product_name_header">Products</th>
+                                <th class="text-end" id="product_qty_header">Quantity</th>
+                                <th class="text-end" id="product_price_header">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody class="sale_tbody">
+                            <t t-foreach="repair_order.product_line_ids" t-as="products">
+                                <tr t-att-class="'bg-200 fw-bold o_line_section'">
+                                    <td id="product_name">
+                                        <span t-field="products.product_id"/>
+                                    </td>
+                                    <td class="text-end" id="product_quantity">
+                                        <span t-field="products.quantity"/>
+                                    </td>
+                                    <td class="text-end" id="price_id">
+                                        <div id="price">
+                                            <span t-field="products.product_price"
+                                                  t-options='{"widget": "monetary", "display_currency": repair_order.currency_id}'/>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    </div>
+                    </t>
+
+                    <t t-if="repair_order.labour_line_ids">
+                    <div class="table-responsive">
+                    <table t-att-data-order-id="repair_order.id" t-att-data-token="repair_order.access_token" class="table table-sm" id="sales_labour_order_table">
+                        <thead class="bg-100">
+                            <tr>
+                                <th class="text-start" id="labour_name_header">Labours</th>
+                                <th class="text-end" id="labour_qty_header">Time Spent</th>
+                                <th class="text-end" id="labour_price_header">Hourly Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody class="repair_labour_tbody">
+                            <t t-foreach="repair_order.labour_line_ids" t-as="labours">
+                                <tr t-att-class="'bg-200 fw-bold o_line_section'">
+                                    <td id="labour_name">
+                                        <span t-field="labours.labor_id"/>
+                                    </td>
+                                    <td class="text-end" id="time_spent">
+                                        <span t-field="labours.time_spent"/>
+                                    </td>
+                                    <td class="text-end" id="hourly_cost_id">
+                                        <div id="hourly_cost_div">
+                                            <span t-field="labours.labor_id.hourly_cost"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    </div>
+                    </t>
+<!--                      chatter-->
+<!--                    <hr/>-->
+<!--                    <div id="sale_order_communication">-->
+<!--                        <h3>Communication history</h3>-->
+<!--                        <t t-call="portal.message_thread"/>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </xpath>
+     </template>
 </odoo>
