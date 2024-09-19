@@ -9,7 +9,7 @@
                 <page string="Associated products">
                   <tree editable="bottom">
                       <field name="associated_product_ids" widget="subtasks_one2many"/>
-                   </tree>/>
+                   </tree>
                 </page>
             </xpath>
         </field>

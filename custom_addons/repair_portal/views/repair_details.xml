@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+
+<!--    Breadcrumb menu-->
     <template id="portal_my_home_menu_repair" name="Portal layout : Repair menu entries"
               inherit_id="portal.portal_breadcrumbs" priority="5">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
@@ -7,12 +9,14 @@
                 <a t-if="repair_order" t-attf-href="/my/repair/?{{ keep_query() }}">Repair Order</a>
                 <t t-else="">Repair Order</t>
             </li>
-             <li t-if="repair_order" class="breadcrumb-item active">
+            <li t-if="repair_order" class="breadcrumb-item active">
                  <a t-if="repair_order" t-attf-href="/my/repair/?{{ keep_query() }}">Repair Order</a>
                  / <t t-out="repair_order.name"/>
-             </li>
+            </li>
         </xpath>
     </template>
+
+<!--    Tree view-->
     <template id="portal_repair_details" inherit_id="portal.portal_my_home"
               name="Partner Details" customize_show="True">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
@@ -28,6 +32,7 @@
             </div>
     </template>
 
+<!--    content-->
      <template id="portal_my_repair_details" name="My Quotations">
         <t t-call="portal.portal_layout">
             <t t-set="breadcrumbs_searchbar" t-value="True"/>
@@ -87,9 +92,6 @@
                                         <img class="o_avatar o_portal_contact_img rounded" t-att-src="image_data_uri(repair_order.advisor_id.avatar_128)" alt="Contact"/>
                                         <div>
                                             <h6 class="mb-0" t-out="repair_order.advisor_id.name"/>
-<!--                                            <a href="#discussion" class="d-flex align-items-center gap-2 small fw-bold">-->
-<!--                                                Send message-->
-<!--                                            </a>-->
                                         </div>
                                     </div>
                                 </div>
@@ -98,7 +100,7 @@
                     </t>
                 </t>
                 <div id="repair_content" class="col-12 col-lg-9 col-xl-8 mt-5 mt-lg-0">
-                                          <!-- main content -->
+                    <!-- main content -->
                     <div id="introduction" t-attf-class="#{'border-bottom-0 pt-0 pb-3 bg-white' if report_type == 'html' else ''}">
                         <div class="row" id="intro_row">
                             <h3 class="my-0 col-12 col-lg flex-grow-1 mb-1 mb-lg-0">
