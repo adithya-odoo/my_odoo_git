@@ -2,6 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_owner.ProductsWidget" t-inherit="point_of_sale.ProductsWidget" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('product-list-container')]/div/t/ProductCard" position="attributes">
+            <t t-log="pos.get_order()"/>
             <attribute name="owner">product.product_owner_id</attribute>
         </xpath>
     </t>

@@ -17,10 +17,10 @@
 
     'assets': {
         'point_of_sale._assets_pos': [
-            'pos_owner/static/src/js/pos_reciept.js',
+            'pos_owner/static/src/js/pos_props.js',
             'pos_owner/static/src/xml/pos_owner.xml',
             'pos_owner/static/src/xml/props.xml',
-            'pos_owner/static/src/xml/pos_reciept.xml',
+            'pos_owner/static/src/xml/pos_orderline.xml',
         ]
     },
 }

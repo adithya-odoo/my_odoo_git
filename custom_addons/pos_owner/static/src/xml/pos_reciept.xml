@@ -1,14 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<templates id="template" xml:space="preserve">
-<t t-name="pos_owner_receipt.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="after">
-<!--        <t t-foreach="props.data.owner" t-as="owner" t-key="owner_id.id">-->
-            <div class="pos-receipt-center-align">
-<!--                <div>Customer : <t t-esc="owner.product"/>-->
-                </div>
-                <br/>
-<!--            </div>-->
-<!--        </t>-->
-    </xpath>
-</t>
-</templates>
+<!--<?xml version="1.0" encoding="UTF-8" ?>-->
+<!--<templates id="template" xml:space="preserve">-->
+<!--    <t t-name="product_owner.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">-->
+<!--    <xpath expr="//Orderline" position="inside">-->
+<!--         <t t-if="line.owner">-->
+<!--             Owner: <t t-esc="line.owner[1]"/>-->
+<!--         </t>-->
+<!--    </xpath>-->
+<!--    </t>-->
+<!--</templates>-->
