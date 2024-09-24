@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+     <record id="mrp_production_form_view" model="ir.ui.view">
+          <field name="name">sale.order.associated_product.inherit</field>
+          <field name="model">mrp.production</field>
+          <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+          <field name="arch" type="xml">
+              <xpath expr="//sheet" position="before">
+                  <header>
+                      <button id="create_invoice" type="object"
+                            name="action_create_invoice"
+                            string="Create Invoice" class="btn-primary"
+                            invisible="state not in ('done', 'progress', 'to_close')"/>
+                  </header>
+               </xpath>
+               <xpath expr="//field[@name='user_id']" position="after">
+               <field name="component_cost"/>
+               </xpath>
+                <xpath expr="//page[@name='components']" position="after">
+                    <page string="Extra product" name="extra_product">
+                        <field name="extra_cost_ids" string="Extra cost" wwidget="one2many">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                    <field name="standard_price"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+          </field>
+     </record>
+</odoo>
+

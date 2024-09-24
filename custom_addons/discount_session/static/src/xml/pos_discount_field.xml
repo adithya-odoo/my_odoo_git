@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="discount_session.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('navbar-button')]" position="before">
+            <div class="product-discount-field rounded-0 d-flex align-items-center">
+                Discount Limit:<t t-esc="this.pos.currency.symbol"/> <t t-esc="this.pos.config.discount_limit"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

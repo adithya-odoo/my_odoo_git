@@ -75,7 +75,7 @@ class VehicleManagement(models.Model):
     estimated_delivery_date = fields.Date(string="Estimated delivery date")
     smart_invoice = fields.Integer(compute='compute_invoice_count')
     invoice_id = fields.Many2one('account.move', string="Invoice",
-                                 store=True)
+                                  store=True)
     invoice_status = fields.Selection(related='invoice_id.state')
     paid_status = fields.Char(compute="_compute_change_payment_state")
     color_change = fields.Char(string="Color", default=0, store=True)

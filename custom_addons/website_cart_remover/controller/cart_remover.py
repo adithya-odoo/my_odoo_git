@@ -3,7 +3,7 @@
 from odoo.http import request, Controller, route
 
 
-class cart_remover(Controller):
+class CartRemover(Controller):
     @route(['/shop/clear_cart'], type='json', auth="public", website=True)
     def clear_cart(self):
         order = request.website.sale_get_order()

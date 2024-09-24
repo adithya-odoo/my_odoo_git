@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="clearAllButton" owl="1">
+        <button class="control-button btn btn-light rounded-0 fw-bolder"
+                t-on-click="() => this.onClick()">
+            <i class="fa fa-eraser"/>
+            <span>Clear All</span>
+        </button>
+    </t>
+</templates>

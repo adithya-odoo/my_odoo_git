@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from email.policy import default
 
 from odoo import fields, models
 
@@ -13,4 +14,10 @@ class DiscountSession(models.Model):
                                   related='company_id.currency_id',
                                   default=lambda
                                       self: self.env.user.company_id.currency_id.id)
+    is_discount = fields.Boolean(string="Discount", default=False)
+    type = fields.Selection(selection=[
+            ('amount', "Amount"),
+            ('percentage', "Percentage"),
+        ], string="Discount Type")
     discount_limit = fields.Monetary(string="Discount Limit")
+    discount_limit_percentage = fields.Float(string="Discount Percentage")

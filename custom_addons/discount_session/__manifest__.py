@@ -12,13 +12,13 @@
     ],
     'data':[
         'views/discount_setting.xml',
+        'views/pos_order_views.xml',
     ],
 
     'assets': {
         'point_of_sale._assets_pos': [
-              'discount_session/static/src/js/discount_session.js'
-              # 'discount_session/static/src/xml/discount_session_pos.xml'
-              # 'discount_session/static/src/xml/actionpadwidget.xml'
+              'discount_session/static/src/js/discount_session.js',
+
             ]
-    }
+    },
 }

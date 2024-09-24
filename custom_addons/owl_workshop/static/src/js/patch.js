@@ -15,8 +15,7 @@ patch(InputBox.prototype, {
         this.state = useState(
         {
         value: 0,
-        }
-        )
+        })
 
  useEffect(
     () => { this.demo()
