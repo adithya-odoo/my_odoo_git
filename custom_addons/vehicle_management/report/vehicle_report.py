@@ -41,14 +41,12 @@ class VehiclePdfReport(models.AbstractModel):
         self.env.cr.execute(query)
         report = self.env.cr.dictfetchall()
         state_dict = dict(self.env['vehicle.management']._fields['state'].selection)
-        print(state_dict)
         for record in report:
             record['advisor_len'] = 0
             record['customer_len'] = 0
             record['vehicle_name'] = record.get('vehicle_name').capitalize()
             record['service_type'] = record.get('service_type').capitalize()
             record['state_dict'] = state_dict
-        print(report)
 
         if data.get('advisor_ids'):
             for record in report:
@@ -56,7 +54,6 @@ class VehiclePdfReport(models.AbstractModel):
         if data.get('customer_ids'):
             for record in report:
                 record['customer_len'] = data.get('customer_len')
-        print(query)
 
         # docs = self.env['vehicle.management'].browse(doc_ids)
 

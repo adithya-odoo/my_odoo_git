@@ -44,7 +44,6 @@ class SaleOrder(models.Model):
             if self.team_id.crm_commission_id.revenue_wise == 'straight':
                 sum_subtotal = sum(self.order_line.mapped('price_subtotal'))
                 for record in self.team_id.crm_commission_id:
-                    print(record.to_amount)
                     if record.from_amount <= sum_subtotal < record.to_amount:
                         self.team_id.team_commission_ids = [Command.create({
                             'commission_name': self.team_id.crm_commission_id.name,
@@ -97,7 +96,6 @@ class SaleOrder(models.Model):
             is_true = False
             order_line = self.order_line
             for rec in order_line:
-                print(rec.product_template_id)
                 for record in self.user_id.crm_commission_id.product_ids:
                     if rec.product_template_id.id == record.product_id.id:
                         is_true = True

@@ -152,7 +152,6 @@ class VehicleManagement(models.Model):
                 ('start_date', '=', record.start_date),
                 ('partner_id', '=', record.partner_id.id),
             ])
-            print(existing_vehicle)
             if len(existing_vehicle) > 1:
                 raise ValidationError('This Vehicle number is invalid.')
 

@@ -37,7 +37,6 @@ class DateFilter(models.TransientModel):
       if self.customer_ids:
          data['customer_len'] = len(data['customer_ids'])
 
-      print(data)
 
       return (self.env.ref(
          'vehicle_management.action_report_vehicle_management').report_action(None, data=data))

@@ -14,5 +14,4 @@ class DynamicSnippets(Controller):
                                                                                  'vehicle_number'],
                                                                             order='create_date DESC')
 
-       print(repair_orders, "controller")
        return repair_orders

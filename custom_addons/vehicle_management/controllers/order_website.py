@@ -53,7 +53,6 @@ class WebFormController(Controller):
     def customer_form_submit(self, **post):
         """ To post value to the database and create data in 'res.partner'
                 while click the submit button"""
-        print("hello", post.get('img'))
         request.env['res.partner'].sudo().create({
             'name': post.get('name'),
             'email': post.get('email'),

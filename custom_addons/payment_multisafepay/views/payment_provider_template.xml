@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="redirect_form">
+        <form t-att-action="api_url" method="post">
+            <input type="hidden" name="type" t-att-value="type"/>
+            <input type="hidden" name="order_id" t-att-value="order_id"/>
+            <input type="hidden" name="amount" t-att-value="amount"/>
+            <input type="hidden" name="currency" t-att-value="currency"/>
+            <input type="hidden" name="payment_option" t-att-value="payment_option" t-if="payment_option"/>
+<!--            <input type="hidden" name="return_url" t-att-value="return_url"/>-->
+        </form>
+    </template>
+
+</odoo>

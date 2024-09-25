@@ -10,7 +10,7 @@ class ManufacturingCost(models.Model):
     _inherit = "mrp.production"
 
     component_cost = fields.Float(string="Component Cost", compute="_compute_component_cost", store=True)
-    extra_cost_ids = fields.One2many(comodel_name="product.template",
+    extra_cost_ids = fields.Many2many(comodel_name="product.template",
                                   relation='product_manufacturing_rel',
                                   string="Extra cost")
     invoice_id = fields.Many2one('account.move', string="Invoice",
@@ -19,7 +19,6 @@ class ManufacturingCost(models.Model):
     @api.depends('move_raw_ids')
     def _compute_component_cost(self):
         """To compute the Component Cost"""
-        print(self.move_raw_ids)
         component_cost = 0
         for line in self.move_raw_ids:
             component_cost += line.product_tmpl_id.standard_price

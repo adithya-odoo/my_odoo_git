@@ -35,7 +35,6 @@ class PosOrder(models.Model):
             for record in rec.lines:
                 total_amount += record.total_price
                 rec.whole_total_amount = total_amount
-            print(rec.whole_total_amount)
         return total_amount
 
     @api.model

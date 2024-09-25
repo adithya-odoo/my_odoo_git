@@ -28,7 +28,6 @@ class ReportFilter(models.TransientModel):
    advisor_ids = fields.Many2many('res.users', string="Advisor")
 
    def action_print_report_pdf(self):
-      print("action_print_report_pdf")
       if self.start_date and self.end_date:
          if self.start_date > self.end_date:
             raise ValidationError('End date should be larger than start date')
@@ -50,7 +49,7 @@ class ReportFilter(models.TransientModel):
       if self.customer_ids:
          data['customer_len'] = len(data['customer_ids'])
 
-      print(data)
+
 
       return (self.env.ref(
          'vehicle_management.action_report_vehicle_management').report_action(None, data=data))
@@ -77,8 +76,6 @@ class ReportFilter(models.TransientModel):
          excel_data['advisor_len'] = len(excel_data['advisor_ids'])
       if self.customer_ids:
          excel_data['customer_len'] = len(excel_data['customer_ids'])
-
-      print(excel_data)
       return {
          'type': 'ir.actions.report',
          'data': {'model': 'report.filter',
@@ -121,13 +118,8 @@ class ReportFilter(models.TransientModel):
       if excel_data.get('advisor_ids'):
          query += """ and advisor_id in %s """ % (
             str(tuple(excel_data.get('advisor_ids')))).replace(",)", ")")
-
       self.env.cr.execute(query)
       excel = self.env.cr.dictfetchall()
-
-      print(query)
-      print(excel)
-
       for record in excel:
          record['advisor_len'] = 0
          record['customer_len'] = 0
@@ -152,11 +144,9 @@ class ReportFilter(models.TransientModel):
          {'font_size': '10px', 'align': 'top', 'bold': True})
       head = workbook.add_format(
          {'align': 'center', 'bold': True, 'font_size': '20px'})
-      print(html2text.html2text(self.env.company.company_details))
       txt = workbook.add_format({'font_size': '10px', 'align': 'center'})
       # Sheet heading
       cur = self.env.company.currency_id.symbol
-      print(cur)
       sheet.merge_range('D3:G4', 'VEHICLE MANAGEMENT', head)
       sheet.write('I1',str(datetime.date.today()), cell_format)
       sheet.merge_range('A1:C3',html2text.html2text(self.env.company.company_details), details)
@@ -172,7 +162,6 @@ class ReportFilter(models.TransientModel):
             sheet.write('A4',"Advisor:", cell_format)
             sheet.merge_range('B4:C4', rec['advisor'], txt)
          if rec['customer_len'] < 2 and rec['customer_len'] != 0:
-            print("cust")
             sheet.write('A5',"Customer:", cell_format)
             sheet.merge_range('B5:C5', rec['customer_name'], txt)
 
@@ -180,8 +169,6 @@ class ReportFilter(models.TransientModel):
          sheet.write(5, column, 'Vehicle', cell_format)
          sheet.write(row,column, rec.get('vehicle_name'), txt)
          column += 1
-         print(column)
-
             # Hiding column if the data is lesser than 1
          if rec['advisor_len'] > 1 or rec['advisor_len'] == 0:
              sheet.write(5, column, 'Advisor', cell_format)  # Table heading
