@@ -6,8 +6,10 @@
     'category': 'Accounting/Payment Providers',
     'depends': ['payment'],
     'data': [
-            'data/payment_provider_data.xml',
             'views/payment_provider_view.xml',
+            'views/payment_provider_template.xml',
+            'data/payment_provider_data.xml',
+
     ],
 
     'license': 'LGPL-3'
