@@ -4,21 +4,22 @@ import logging
 import pprint
 from werkzeug import urls
 
-from odoo import _, api, models
+from odoo import _, models
 from odoo.exceptions import ValidationError
-from odoo.tools.float_utils import float_repr
 
 from odoo.addons.payment import utils as payment_utils
+
 from odoo.addons.payment_multisafepay.controllers.main import MultisafepayController
 
 _logger = logging.getLogger(__name__)
 
 
 class PaymentTransaction(models.Model):
+    """ To sent transaction details and api key to the payment provider"""
     _inherit = 'payment.transaction'
 
     def _get_specific_rendering_values(self, processing_values):
-
+        """To render to the function"""
         res = super()._get_specific_rendering_values(processing_values)
         if self.provider_code != 'multisafepay':
             return res
@@ -41,10 +42,14 @@ class PaymentTransaction(models.Model):
         return {'api_url': checkout_url, 'url_params': url_params}
 
     def _multisafepay_prepare_payment_request_payload(self):
-
+        """to set payload to transfer to main function"""
         base_url = self.provider_id.get_base_url()
         redirect_url = urls.url_join(base_url, MultisafepayController._return_url)
-        print(self.search_read([]))
+        cancel_url = urls.url_join(base_url, MultisafepayController._cancel_url)
+        cancel_url_params = {
+            'tx_ref': self.reference,
+            'return_access_tkn': payment_utils.generate_access_token(self.reference),
+        }
 
         return {
            "type": "redirect",
@@ -54,11 +59,9 @@ class PaymentTransaction(models.Model):
             "amount":  self.amount * 100,
               "description": "order disc",
              "payment_options": {
-              "notification_url": "https://www.example.com/client/notification?type=notification",
                "notification_method": "POST",
               "redirect_url": f'{redirect_url}?ref={self.reference}',
-             "cancel_url": "https://www.example.com/client/notification?type=cancel",
-             "close_window": True
+              "close_window": True
              },
              "customer": {
              "locale": self.partner_lang,
@@ -91,12 +94,10 @@ class PaymentTransaction(models.Model):
 
         tx = self.search(
             [('reference', '=', notification_data.get('ref')), ('provider_code', '=', 'multisafepay')])
-        print(self.search_read(
-            [('reference', '=', notification_data.get('ref')), ('provider_code', '=', 'multisafepay')]))
         if not tx:
             raise ValidationError("Multisafepay: " + _(
-                "No transaction found matching reference %s.", notification_data.get('ref')
-            ))
+                "No transaction found matching reference %s.",
+                notification_data.get('ref')))
         return tx
 
     def _process_notification_data(self, notification_data):
@@ -107,14 +108,11 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The notification data sent by the provider
         :return: None
         """
-        # self.ensure_one()
         super()._process_notification_data(notification_data)
         if self.provider_code != 'multisafepay':
             return
         transaction_id = notification_data['transactionid']
-        print(transaction_id)
         payment_data = self.provider_id._multisafepay_make_request(data=transaction_id, method="GET")
-        print(payment_data)
 
         # Update the payment method.
         payment_method_type = payment_data.get('method', '')
@@ -125,14 +123,11 @@ class PaymentTransaction(models.Model):
 
         # Update the payment state.
         payment_status = payment_data['data']['status']
-        print(payment_status)
-        if payment_status == 'pending':
+        if payment_status in ['initialized', 'uncleared']:
             self._set_pending()
-        elif payment_status == 'authorized':
-            self._set_authorized()
-        elif payment_status == 'completed':
+        elif payment_status in ['completed', 'shipped']:
             self._set_done()
-        elif payment_status in ['expired', 'canceled', 'failed']:
+        elif payment_status in ['void', 'declined', ]:
             self._set_canceled("Multisafepay: " + _("Canceled payment with status: %s", payment_status))
         else:
             _logger.info(
@@ -140,5 +135,4 @@ class PaymentTransaction(models.Model):
                 payment_status, self.reference
             )
             self._set_error(
-                "Multisafepay: " + _("Received data with invalid payment status: %s", payment_status)
-            )
+                "Multisafepay: " + _("Received data with invalid payment status: %s", payment_status))

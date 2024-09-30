@@ -291,7 +291,7 @@ class VehicleManagement(models.Model):
             if tomorrow_delivery:
                 tomorrow_delivery.color_change = 'orange'
 
-     # portal.mixin override
+    # portal.mixin override
     def _compute_access_url(self):
         super()._compute_access_url()
         for repair in self:

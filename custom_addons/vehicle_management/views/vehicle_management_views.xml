@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-     <record id="vehicle_management_action" model="ir.actions.act_window">
-             <field name="name">Vehicle</field>
-            <field name="res_model">vehicle.management</field>
-             <field name="view_mode">tree,form,kanban</field>
-    </record>
-
     <record id="vehicle_management_tree_view" model="ir.ui.view">
         <field name="name">vehicle_management_tree_view</field>
         <field name="model">vehicle.management</field>
@@ -75,7 +69,8 @@
                         string="Invoice"
                         type="object"
                         class="oe_stat_button"
-                        icon="fa-pencil-square-o">
+                        icon="fa-pencil-square-o"
+                        invisible="smart_invoice == 0">
                          <field name="smart_invoice" widget='statinfo'
                                 string="Invoice" icon="fa fa-file-invoice"
                                 options="{'no_create': True,
@@ -205,7 +200,11 @@
             </search>
         </field>
      </record>
-
+    <record id="vehicle_management_action" model="ir.actions.act_window">
+             <field name="name">Vehicle</field>
+            <field name="res_model">vehicle.management</field>
+             <field name="view_mode">tree,form,kanban</field>
+    </record>
     <menuitem id="vehicle_management_menu" name="Vehicle Management"
               action="vehicle_management_action"/>
 </odoo>

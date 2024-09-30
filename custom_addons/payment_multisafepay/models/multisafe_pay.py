@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import logging
-import requests
-import pprint
 
+import requests
+
+import pprint
 
 from odoo import _, fields, models
 
@@ -12,6 +13,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PaymentProvider(models.Model):
+    """ To set fields inside payment provider"""
     _inherit = 'payment.provider'
 
     code = fields.Selection(selection_add=[('multisafepay', 'Multisafepay')],
@@ -22,13 +24,13 @@ class PaymentProvider(models.Model):
         required_if_provider="multisafepay")
 
     def _multisafepay_make_request(self, data=None, method='POST'):
-        print("ftt")
+        """To make request("GET", "PUT") to the api url via payment transaction"""
         if method == 'POST':
             self.ensure_one()
             url = f'https://testapi.multisafepay.com/v1/json/orders?api_key={self.multisafepay_api_key}'
 
             headers = {
-                 "Accept": "application/json",
+                "Accept": "application/json",
                 "Content-Type": "application/json",
             }
 
