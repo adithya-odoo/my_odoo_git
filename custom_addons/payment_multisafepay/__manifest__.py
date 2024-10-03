@@ -11,8 +11,6 @@
             'views/payment_provider_template.xml',
             'data/payment_provider_data.xml',
             'data/account_payment_method.xml',
-
-
     ],
     'installable': True,
     'license': 'LGPL-3'

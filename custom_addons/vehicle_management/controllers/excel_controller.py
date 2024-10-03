@@ -3,10 +3,9 @@
 import json
 
 from odoo import http
-
 from odoo.http import content_disposition, request
-
 from odoo.tools import html_escape
+
 
 class XLSXReportController(http.Controller):
    """ This class is for generate Excel report"""

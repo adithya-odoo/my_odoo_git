@@ -104,6 +104,7 @@
                         <field name="company_id"/>
                         <field name="paid_status" invisible="1"/>
                         <field name="color_change" invisible="1"/>
+                        <field name="float_to_integer" widget="float_to_integer"/>
                     </group>
                     <group>
                         <field name="advisor_id"

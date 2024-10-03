@@ -3,7 +3,6 @@
 import datetime
 
 from odoo import api, Command, fields, models, _
-
 from odoo.exceptions import ValidationError
 
 
@@ -79,6 +78,7 @@ class VehicleManagement(models.Model):
     invoice_status = fields.Selection(related='invoice_id.state')
     paid_status = fields.Char(compute="_compute_change_payment_state")
     color_change = fields.Char(string="Color", default=0, store=True)
+    float_to_integer = fields.Float(string="Float to integer")
 
     def compute_invoice_count(self):
         """ To count the number of invoice of a customer on a vehicle service

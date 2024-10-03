@@ -2,14 +2,12 @@
 
 import logging
 import pprint
+
+from odoo.addons.payment_multisafepay.controllers.main import MultisafepayController
 from werkzeug import urls
 
 from odoo import _, models
 from odoo.exceptions import ValidationError
-
-from odoo.addons.payment import utils as payment_utils
-
-from odoo.addons.payment_multisafepay.controllers.main import MultisafepayController
 
 _logger = logging.getLogger(__name__)
 
@@ -45,12 +43,8 @@ class PaymentTransaction(models.Model):
         """to set payload to transfer to main function"""
         base_url = self.provider_id.get_base_url()
         redirect_url = urls.url_join(base_url, MultisafepayController._return_url)
-        cancel_url = urls.url_join(base_url, MultisafepayController._cancel_url)
-        cancel_url_params = {
-            'tx_ref': self.reference,
-            'return_access_tkn': payment_utils.generate_access_token(self.reference),
-        }
-
+        cancel_url = urls.url_join(base_url, '/shop/payment')
+        partner_name = self.partner_name.split(" ", 1)
         return {
            "type": "redirect",
             "order_id": self.reference,
@@ -61,16 +55,17 @@ class PaymentTransaction(models.Model):
              "payment_options": {
                "notification_method": "POST",
               "redirect_url": f'{redirect_url}?ref={self.reference}',
+                 "cancel_url":cancel_url,
               "close_window": True
              },
              "customer": {
              "locale": self.partner_lang,
              "ip_address": "123.123.123.123",
-              "first_name": "Mitchell",
-              "last_name": "Admin",
+              "first_name": partner_name[0],
+              "last_name": partner_name[1],
               "company_name": self.company_id.name,
                 "address1": self.partner_city,
-                  "house_number": "211",
+              "house_number": "211",
                "zip_code": self.partner_zip,
                 "city": self.partner_city,
                 "country": self.partner_country_id.name,

@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 import logging
+import pprint
 
 import requests
 
-import pprint
-
 from odoo import _, fields, models
-
 from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -49,13 +47,10 @@ class PaymentProvider(models.Model):
                    _logger.exception("Unable to reach endpoint at %s", url)
                    raise ValidationError(
                    "Multisafepay: " + _("Could not establish the connection to the API."))
-
-            print(response.text)
             return response.json()
 
         elif method == 'GET':
             url = f'https://testapi.multisafepay.com/v1/json/orders/{data}?api_key={self.multisafepay_api_key}'
             headers = {"accept": "application/json"}
             response = requests.request(method, url, headers=headers)
-            print(response.text)
             return response.json()

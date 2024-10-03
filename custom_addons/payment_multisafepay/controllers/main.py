@@ -1,22 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from odoo import http
-
 from odoo.http import request
-
-from odoo.addons.payment import utils as payment_utils
-
-from werkzeug.exceptions import Forbidden
 
 
 class MultisafepayController(http.Controller):
     _return_url = '/payment/Multisafepay/return'
-    _cancel_url = '/payment/Multisafepay/cancel/'
 
 
     @http.route(_return_url, type='http', auth='public', methods=['GET', 'POST'], csrf=False,
         save_session=False)
-
     def Multisafepay_return_from_checkout(self, **data):
         """ Process the PDT notification sent by Multisafepay after redirection from checkout.
 
@@ -36,21 +29,3 @@ class MultisafepayController(http.Controller):
                """
         request.env['payment.transaction'].sudo()._handle_notification_data('multisafepay', data)
         return request.redirect('/payment/status')
-
-    # @http.route(_cancel_url, type='http', auth='public', methods=['GET'],csrf=False, save_session=False)
-    # def multisafepay_return_from_canceled_checkout(self, tx_ref, return_access_tkn):
-    #     """ Process the transaction after the customer has canceled the payment.
-    #
-    #     :param str tx_ref: The reference of the transaction having been canceled.
-    #     :param str return_access_tkn: The access token to verify the authenticity of the request.
-    #                                   multisafepay forbids any parameter with the name "token" inside.
-    #     """
-    #
-    #     tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-    #         'multisafepay', {'item_number': tx_ref}
-    #     )
-    #     if not payment_utils.check_access_token(return_access_tkn, tx_ref):
-    #         raise Forbidden()
-    #     tx_sudo._handle_notification_data('paypal', {})
-    #
-    #     return request.redirect('/payment/status')

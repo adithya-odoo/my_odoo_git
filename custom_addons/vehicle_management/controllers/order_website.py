@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from odoo.http import request, Controller, route
-
-from odoo.models import check_method_name
+import base64
 
 from odoo.api import call_kw
-
-import base64
+from odoo.http import request, Controller, route
+from odoo.models import check_method_name
 
 
 class WebFormController(Controller):
