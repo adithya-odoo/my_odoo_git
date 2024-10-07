@@ -15,6 +15,7 @@ class CrmDashboard extends Component {
             $('#my_lead').append('<span>' + result.total_leads + '</span>');
             $('#my_opportunity').append('<span>' + result.total_opportunity + '</span>');
             $('#revenue').append('<span>' + result.currency + result.expected_revenue + '</span>');
+            $('#invoiced_amount').append('<span>' + result.currency + result.invoiced_amount + '</span>');
             $('#won').append('<span>' +result.won + '</span>');
             $('#lost').append('<span>' +result.lost + '</span>');
             });

@@ -12,8 +12,7 @@ class WarningWizard(models.TransientModel):
 
    def action_accept(self):
       """ Accept the delivery through wizard """
-      pick_id = self.env.context.get('active_id')
-      self.env['stock.picking'].browse(pick_id).write({
+      self.env['stock.picking'].browse(self.env.context.get('active_id')).write({
          'state' : 'done'
       })
 
