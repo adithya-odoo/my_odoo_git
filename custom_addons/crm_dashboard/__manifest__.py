@@ -13,6 +13,10 @@
         'web.assets_backend': [
                  'crm_dashboard/static/src/js/crm_dashboard.js',
                  'crm_dashboard/static/src/xml/crm_dashboard.xml',
+        ],
+        "web.chartjs_lib": [
+            '/web/static/lib/Chart/Chart.js',
+            '/web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',
         ]
     }
 
