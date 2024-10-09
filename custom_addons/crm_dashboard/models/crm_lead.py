@@ -109,4 +109,46 @@ class CrmLead(models.Model):
             'data': campaign_len
         }
 
+    @api.model
+    def get_table_data(self):
+        print("hg")
+        lead = self.search([('company_id', '=', self.env.company.id),
+                              ('user_id', '=', self.env.user.id),
+                              ('type', '=', 'lead')])
+
+        lead_month = []
+        lead_len = []
+        # print(lead.date_open)
+        checked_mnth = []
+        for data in lead:
+            if checked_mnth == 0 or data.create_date.month not in checked_mnth:
+                print("gfyfytfy")
+                lead_len.append(len(lead.filtered(
+                    lambda r: r.create_date.month == data.create_date.month)))
+                lead_month.append(data.create_date.month)
+                checked_mnth.append(data.create_date.month)
+        print(lead_len)
+        print(lead_month)
+        month = {
+            1: 'January',
+            2: 'February',
+            3: 'March',
+            4: 'April',
+            5: 'May',
+            6: 'June',
+            7: 'July',
+            8: 'August',
+            9: 'September',
+            10: 'October',
+            11: 'November',
+            12: 'December'
+        }
+        months = []
+        for keys in month.keys():
+            if keys in lead_month:
+                months.append(month[keys])
+        return {
+            'months' : months,
+            'data' : lead_len
+        }
 
