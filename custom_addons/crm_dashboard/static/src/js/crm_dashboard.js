@@ -2,6 +2,7 @@
 import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { session } from "@web/session";
 import { Component, onWillStart, useEffect, useState} from  "@odoo/owl";
 
 const actionRegistry = registry.category("actions");
@@ -10,19 +11,24 @@ class CrmDashboard extends Component {
      super.setup()
      this.orm = useService('orm')
      this._crm_data()
-
+     this.company_data()
+     this.user = useService('user');
      this.state = useState({
-            month_list: {},
+            monthList: {},
         });
 
-     onWillStart(async () => await loadBundle("web.chartjs_lib"));
+     onWillStart(async () =>{
+      await loadBundle("web.chartjs_lib");
+      this.isCrmManager = await this.user.hasGroup("sales_team.group_sale_manager");
+      this.isCrmUser = await this.user.hasGroup("sales_team.group_sale_salesman_all_leads");
+      this.isNormalUser = await this.user.hasGroup("sales_team.group_sale_salesman");
+     });
      useEffect(() => {
+//             this.tableChart();
              this.barChart();
              this.pieChart();
              this.doughnutChart();
              this.lineChart();
-             this.tableChart();
-             this.tableChart();
         });
    }
 
@@ -34,6 +40,11 @@ class CrmDashboard extends Component {
             $('#invoiced_amount').append('<span>' + result.currency + result.invoiced_amount + '</span>');
             $('#won').append(result.won);
             $('#lost').append(result.lost);
+            });
+        };
+    async company_data(){
+    await this.orm.call("crm.lead", "get_company_data", [], {}).then(function(result){
+           $('#company_details').append(result)
             });
         };
 
@@ -75,12 +86,14 @@ class CrmDashboard extends Component {
 
   async tableChart(){
   console.log("edgvbdhbs")
-   this.state.month_list = await this.orm.call("crm.lead", "get_table_data", [], {})
-   console.log(this.state.month_list.data, "ftytfyt")
+  await this.orm.call("crm.lead", "get_table_data", [], {}).then(function(result){
+    this.state.monthList = result
+    console.log(this.state.month_list, "ftytfyt")
+   });
   }
 
   async pieChart(){
-  console.log("dhv")
+  console.log(this)
   await this.orm.call("crm.lead", "get_pie_data", [], {}).then(function(result){
           console.log(result.name.length, result.name, result.data,  "wejdded")
            var ctx = document.getElementById('pie_canvas');
@@ -182,16 +195,13 @@ class CrmDashboard extends Component {
    }
    redirectToLeads() {
      console.log(this)
-     console.log(this.env.orm,"dwjhwjduywd")
      this.env.services.action.doAction({
          type: 'ir.actions.act_window',
          name: 'Leads',
          res_model: 'crm.lead',
-          views:[[false, "list"], [false, "form"]],
+         views:[[false, "list"], [false, "form"]],
          target: 'current',
-         context: {
-             search_default_user_id: 2,
-         },
+         domain : [["user_id", "=", session.uid],['type', '=', 'lead']]
 
      });
  }
@@ -202,9 +212,7 @@ class CrmDashboard extends Component {
          res_model: 'crm.lead',
          views: [[false, "list"], [false, "form"]],
          target: 'current',
-         context: {
-             search_default_user_id: 2,
-         },
+        domain : [["user_id", "=", session.uid],['type', '=', 'opportunity']]
        });
  }
  }

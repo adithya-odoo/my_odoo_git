@@ -6,11 +6,16 @@
                 <center>
                     <h1 style="margin: 20px;">Crm Dashboard</h1>
                 </center>
+                <t t-if="isCrmManager">
+                    <div>
+                        <div style="font-size:15px;margin-left=15px;" id="company_details"/>
+                    </div>
+                </t>
             </div>
             <!-- Main content starts here -->
             <div class="row main-section" style="margin-left: 120px; margin-right:10px;">
 
-                 Lead Tile
+<!--                 Lead Tile-->
                 <div id="leads"  t-on-click="redirectToLeads" class="col-md-2 col-sm-6 tot_tasks oh-payslip" style="overflow: hidden; padding-top: 30px;">
                     <div class="oh-card" style="box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); display: flex; justify-content: center; height: 200px; border-radius: 10px; background-color: #f9f9f9; transition: transform 0.3s;">
                         <div class="oh-card-body" style="padding: 5px; width: 100%; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
@@ -28,7 +33,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Opportunity Tile -->
                 <div id="opportunity" t-on-click="redirectToOpportunity" class="col-md-2 col-sm-6 tot_tasks oh-payslip" style="overflow: hidden; padding-top: 30px;">
                     <div class="oh-card" style="box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); display: flex; justify-content: center; height: 200px; border-radius: 10px; background-color: #f9f9f9; transition: transform 0.3s;">
@@ -174,22 +178,22 @@
                         <div class="oh-card-body" style="padding: 5px 5px; float: left; width: 100%; height: auto; box-sizing: border-box; margin: 0;">
                             <div class="stat-content" style="text-align: center; font-weight: bold; padding-top: 20px; padding-left: 80px;">
                                 <div class="stat_count_ex_rev" style="font-size: 17px;">
-                                    <table border="1px solid black" style="width:100%">
-                                        <tr>
-                                            <t t-foreach="state.month_list.months" t-as="mon" t-key="mon[0]">
-                                            <th>
-                                               <t t-esc="mon"/>
-                                            </th>
-                                            </t>
-                                        </tr>
-                                        <tr>
-                                            <t t-foreach="state.month_list.data" t-as="mon" t-key="mon[1]">
-                                            <td>
-                                                <t t-esc="mon"/>
-                                            </td>
-                                            </t>
-                                        </tr>
-                                    </table>
+<!--                                    <table border="1px solid black" style="width:100%">-->
+<!--                                        <tr>-->
+<!--                                            <t t-foreach="state.monthList" t-as="mon" t-key="mon[0]">-->
+<!--                                            <th>-->
+<!--                                               <t t-esc="mon"/>-->
+<!--                                            </th>-->
+<!--                                            </t>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <t t-foreach="state.month_list.data" t-as="mon" t-key="mon[1]">-->
+<!--                                            <td>-->
+<!--                                                <t t-esc="mon"/>-->
+<!--&lt;!&ndash;                                            </td>&ndash;&gt;-->
+<!--                                            </t>-->
+<!--                                        </tr>-->
+<!--                                    </table>-->
                                 </div>
                                 <div class="stat-head" style="font-size: 14px;">Lead By Month</div>
                             </div>

@@ -7,7 +7,6 @@ class CrmLead(models.Model):
     """crm inherited model"""
     _inherit = 'crm.lead'
 
-
     @api.model
     def get_tiles_data(self):
         """ Return the tile data"""
@@ -151,4 +150,8 @@ class CrmLead(models.Model):
             'months' : months,
             'data' : lead_len
         }
+
+    @api.model
+    def get_company_data(self):
+        return  self.env.company.company_details
 

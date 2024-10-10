@@ -5,9 +5,11 @@
     'version': '1.0',
     'installable': True,
     'depends': ['base',
-                'crm'],
+                'crm',
+                 'sale'],
     'data':[
         'views/crm_dashboard_menu.xml',
+        'views/crm_team.xml',
     ],
     'assets': {
         'web.assets_backend': [
